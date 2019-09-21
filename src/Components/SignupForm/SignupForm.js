@@ -23,15 +23,17 @@ import Button from '@material-ui/core/Button';
 import firebase from '../Config/config.js'
 import { database } from 'firebase';
 import {withRouter} from 'react-router-dom'
+import admin from 'firebase-admin';
 
 
+//const functions = require('firebase-functions');
 
 
 
 
 const useStyles = makeStyles(theme => ({
   card: {
-    maxWidth: 345,
+    maxWidth: 380,
     margin:'auto',
     marginTop:'2%'
   
@@ -82,6 +84,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function RecipeReviewCard(props) {
+
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
 
@@ -90,14 +93,13 @@ function RecipeReviewCard(props) {
   }
 
   const [userData, setuserData] = React.useState({
-    userId:'',
     firstName: '',
     lastName:'',
     email:'',
     password:'',
     c_password:'',
     companyName:'',
-    buttoDisableUntilFieldsEmpty:true
+    
   });
 
   
@@ -107,7 +109,9 @@ function RecipeReviewCard(props) {
   };
 
  function goto(path){
-   props.history.path(path)
+
+   props.history.push(path)
+
  }
 
   function handelSigup(e){
@@ -122,38 +126,60 @@ function RecipeReviewCard(props) {
    }
    else{
    
-    
+    const db =firebase.firestore();
 
-        firebase.auth().createUserWithEmailAndPassword(userData.email,userData.password) .then(response => {
-          setuserData.userId  = response.user.uid;
+        firebase.auth().createUserWithEmailAndPassword(userData.email,userData.password) .then(response =>{// creating new user in auth
 
-          const db =firebase.firestore();
-
+          debugger
       
 
-        const taskRef= db.collection("users").doc(`${setuserData.userId}`).set({
+         
           
-          firstName:userData.firstName,
-           lastName:userData.lastName,
-           email:userData.email,
-           password:userData.password,
-           companyName:userData.companyName
-        });
-              
-        setuserData({
-          userId:'',
-          firstName: '',
-          lastName:'',
-          email:'',
-          password:'',
-          c_password:'',
-          companyName:''
+          let userId=response.user.uid
+          if(userId!=null)
+          {debugger
+          //setuserData({userId:response.user.uid})
+             // console.log(userId)
+              // db.settings({
+              //   timestampsInSnapshots: true
+              // });
+          db.collection("users").doc(userId).set({//adding new user data in database
+          
+            
+             firstName:userData.firstName,
+             lastName:userData.lastName,
+             email:userData.email,
+             password:userData.password,
+             companyName:userData.companyName
+          })
+        .then(function() {
+
+   
+ 
+
+          firebase.auth().signOut().then(function() {// logging user out wehn sigup 
+            // Sign-out successful.
+            console.log("Document successfully written!");
+            alert('you have succesfully signed up!')
+             goto('/login');
+             
+             e.preventDefault();
+            
+            
+          }).catch(function(error) {
+            // An error happened.
+            console.log('user not logged out')
+          });
+             
         })
+        .catch(function(error) {
+            console.error("Error writing document: ", error);
+            alert(error)
+        });
+       
+      }
+    
 
-        
-      e.preventDefault();
-
-      goto('/login');
 
         })
         .catch(function(error) {
@@ -168,11 +194,13 @@ function RecipeReviewCard(props) {
 
       }
 
-      
+  
   }
  
   const isEnabled = userData.email.length > 0 && userData.password.length > 0 &&
-   userData.firstName.length > 0 && userData.lastName.length > 0  && userData.c_password.length > 0;
+  userData.firstName.length > 0 && userData.lastName.length > 0  && userData.c_password.length > 0;
+
+  
   return (
 
     <React.Fragment>
@@ -182,8 +210,7 @@ function RecipeReviewCard(props) {
         
       <img src={User} width='80' height='80'/>
        <h1>SIGN UP</h1>
-      <form className={classes.container} onSubmit={(event)=>handelSigup(event)} 
-      noValidate autoComplete="off" >
+      <form className={classes.container} noValidate autoComplete="off" >
       <TextField
         id="outlined-name"
         label="First Name"
@@ -247,8 +274,11 @@ function RecipeReviewCard(props) {
       />
 
        <Button color="primary" className={classes.button}
-       type='submit'
-       disabled={!isEnabled}>
+      //type='submit'
+     disabled={!isEnabled}
+      onClick={(event)=>handelSigup(event)}
+      
+      >
        SIGN UP!
       </Button>
     

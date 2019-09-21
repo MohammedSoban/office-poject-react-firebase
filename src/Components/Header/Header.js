@@ -1,4 +1,5 @@
 import React,{Component} from 'react';
+import { Input, Menu } from 'semantic-ui-react'
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
@@ -8,7 +9,7 @@ import { fade, makeStyles, getContrastRatio } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import Button from '@material-ui/core/Button';
-import Menu from '@material-ui/core/Menu';
+
 import MenuItem from '@material-ui/core/MenuItem';
 import {BrowserRouter,Redirect} from 'react-router-dom';
 import Navigation from '../Navigation/Navigation'
@@ -18,12 +19,21 @@ import {
   MuiThemeProvider,
   createMuiTheme
 } from "@material-ui/core/styles";
-
+import firebase from '../Config/config.js'
+import CardMedia from '@material-ui/core/CardMedia';
+import {
+  MDBNavbar, MDBNavbarBrand, MDBNavbarNav, MDBNavItem, MDBNavLink, MDBNavbarToggler, MDBCollapse, MDBFormInline,
+MDBDropdown, MDBDropdownToggle, MDBDropdownMenu, MDBDropdownItem,MDBIcon
+  } from "mdbreact";
+  import { BrowserRouter as Router } from 'react-router-dom';
 
 
 const styles =(theme => ({
   button: {
     margin: theme.spacing(1),
+    //margin:'auto',
+    fontSize:'100%',
+    
     color: 'white'
   },
   input: {
@@ -33,7 +43,7 @@ const styles =(theme => ({
     flexGrow: 1,
   },
   menuButton: {
-    marginRight: theme.spacing(2),
+    marginRight: theme.spacing(1),
   },
   title: {
     flexGrow: 1,
@@ -41,6 +51,7 @@ const styles =(theme => ({
     [theme.breakpoints.up('sm')]: {
       display: 'block',
     },
+    
    // alignItems: '',
 
    // right:'150px'
@@ -91,7 +102,13 @@ const styles =(theme => ({
   },
 
   Headlogo:{
-     marginRight:'40%'
+   // margin:'auto',
+    justifyContent:'left',
+    position:'relative',
+    right:'20%'
+  },
+  menu:{
+          backgroundColor: 'blue'
   }
 
 }));
@@ -111,11 +128,65 @@ class SearchAppBar extends Component{
 //     setAnchorEl(null);
 //   }
 
+
+constructor(props) 
+{ 
+    super(props); 
+
+   
+
+    this.state={
+      isUserloggedIn:false,
+      activeItem:'home'
+}
+
+} 
+
    goto=(path)=>{
 
   this.props.history.push(path);
 
+  
   }
+
+  handleLogout=()=>{
+    const that = this;
+    firebase.auth().signOut().then(function() {
+      // Sign-out successful.
+      that.setState({isUserloggedIn:false});
+      alert('logout successful')
+      console.log('iam if logout')
+      
+    }).catch(function(error) {
+      // An error happened.
+      alert(error)
+      console.log('iam else logout')
+    });
+  }
+  
+  componentDidMount=()=>{
+
+    const that = this;
+    var user = firebase.auth().currentUser;
+   // firebase.auth().onAuthStateChanged(function(user){
+      if (user) {
+        // User is signed in.   
+    
+        console.log("i am if cdm "+ user.email+" "+user.uid )
+        that.setState({isUserloggedIn:true});
+      
+      } else {
+       
+        // No user is signed in.
+       console.log("i am else cdm")
+        that.setState({isUserloggedIn:false});
+      }
+    //});
+    
+    }
+  toggleCollapse = () => {
+  this.setState({ isOpen: !this.state.isOpen });
+}
 
   render(){
 
@@ -124,63 +195,146 @@ class SearchAppBar extends Component{
   // const [anchorEl, setAnchorEl] = React.useState(null);
 
  const {classes}=this.props  
+
+ const {activeItem}=this.state
  
  return (
-    <React.Fragment>
-  {/* <Navigation/> */}
-     <div >
-    <img className={classes.Headlogo} src='http://moonsteelfab.com/header.gif' />
-    </div>
-    <div className={classes.root}>
-      <AppBar position="static">
-        <Toolbar>  
-          <Typography className={classes.title} variant="h6" noWrap>
-          MOON STEEL FABRICATORS
-          </Typography>
+  //   <React.Fragment>
+  // {/* <Navigation/> */}
 
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
-            </div>
-            <InputBase
-              placeholder="Search…"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              inputProps={{ 'aria-label': 'Search' }}
-            />
-          </div>
+    
+  //   <div className={classes.root}>
+  //     <AppBar position="static">
+  //       <Toolbar>  
+  //       <IconButton
+  //           edge="start"
+  //           className={classes.menuButton}
+  //           color="inherit"
+  //           aria-label="open drawer"
+  //         >
+  //           <MenuIcon />
+  //         </IconButton>
+  //         <Typography className={classes.title} variant="h6" noWrap>
+  //         MOON STEEL FABRICATORS
+  //         </Typography>
+
+  //         <div className={classes.search}>
+  //           <div className={classes.searchIcon}>
+  //             <SearchIcon />
+  //           </div>
+  //           <InputBase
+  //             placeholder="Search…"
+  //             classes={{
+  //               root: classes.inputRoot,
+  //               input: classes.inputInput,
+  //             }}
+  //             inputProps={{ 'aria-label': 'Search' }}
+  //           />
+  //         </div>
 
           
-          <Button className={classes.button}>home</Button>
-          <Button className={classes.button} onClick={()=>this.goto('/products')}> Products </Button>
-          <Button className={classes.button}>SERVICES</Button>
-          <Button className={classes.button}>clients</Button>
-          <Button className={classes.button}>contact</Button>
-          <Button className={classes.button} onClick={()=>this.goto('/login')}>Register now</Button>
+  //         <Button className={classes.button}onClick={()=>this.goto('/')}>home</Button>
+  //         <Button className={classes.button} onClick={()=>this.goto('/products')}> Products </Button>
+  //         <Button className={classes.button}>SERVICES</Button>
+  //         <Button className={classes.button}>clients</Button>
+  //         <Button className={classes.button}>contact</Button>
+  //         { this.state.isUserloggedIn ? (<Button className={classes.button} onClick={()=>this.handleLogout()}>Logout</Button>):
+  //         (<Button className={classes.button} onClick={()=>this.goto('/login')}>Register now</Button>)
+  //         }
 
-        {/* <Typography>
-      <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick} className={classes.menuButton}>
-        Open Menu
-      </Button>
-      <Menu
-        id="simple-menu"
-        anchorEl={anchorEl}
-        keepMounted
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-      >
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
-        <MenuItem onClick={handleClose}>My account</MenuItem>
-        <MenuItem onClick={handleClose}>Logout</MenuItem>
-      </Menu>
-      </Typography> */}
 
-        </Toolbar>
-      </AppBar>
-    </div>
-    </React.Fragment>
+
+  //       </Toolbar>
+  //     </AppBar>
+  //   </div>
+  //   </React.Fragment>
+  
+  <Router>
+  <MDBNavbar color='unique-color-dark'  dark expand="md"
+  double={true}
+  scrolling={true}
+>
+ 
+    <MDBNavbarBrand>
+      <strong className="white-text">MOON STEEL FABRICATORS</strong>
+    </MDBNavbarBrand>
+    <MDBNavbarToggler onClick={this.toggleCollapse} />
+    <MDBCollapse id="navbarCollapse3" isOpen={this.state.isOpen} navbar>
+      <MDBNavbarNav right>
+        <MDBNavItem onClick={()=>this.goto('/')} >
+          <MDBNavLink >Home</MDBNavLink>
+        </MDBNavItem>
+        <MDBNavItem onClick={()=>this.goto('/products')}>
+          <MDBNavLink> Products</MDBNavLink>
+        </MDBNavItem>
+
+       
+        
+        <MDBNavItem>
+          <MDBNavLink href="/">Services</MDBNavLink>
+        </MDBNavItem>
+        <MDBNavItem>
+          <MDBNavLink href="/">Clients</MDBNavLink>
+        </MDBNavItem>
+        <MDBNavItem>
+          <MDBNavLink href="/">Contacts</MDBNavLink>
+        </MDBNavItem>
+
+        
+
+{this.state.isUserloggedIn ? (  <MDBNavItem>
+  <MDBDropdown>
+    <MDBDropdownToggle nav caret>
+      <MDBIcon icon="user" className="mr-1" />Profile
+    </MDBDropdownToggle>
+    <MDBDropdownMenu className="dropdown-default" right>
+      <MDBDropdownItem onClick={()=>this.handleLogout()}>Log out</MDBDropdownItem>
+    </MDBDropdownMenu>
+  </MDBDropdown>
+</MDBNavItem>):
+        (<MDBNavItem onClick={()=>this.goto('/login')}>
+        <MDBNavLink >Register Now</MDBNavLink>
+      </MDBNavItem>)
+         }
+
+
+
+      
+
+
+        <MDBNavItem>
+          <MDBDropdown>
+            <MDBDropdownToggle nav caret>
+              <span className="mr-2">Dropdown</span>
+            </MDBDropdownToggle>
+            <MDBDropdownMenu>
+              <MDBDropdownItem href="#!">Action</MDBDropdownItem>
+              <MDBDropdownItem href="#!">Another Action</MDBDropdownItem>
+              <MDBDropdownItem href="#!">Something else here</MDBDropdownItem>
+              <MDBDropdownItem href="#!">Something else here</MDBDropdownItem>
+            </MDBDropdownMenu>
+          </MDBDropdown>
+        </MDBNavItem>
+      </MDBNavbarNav>
+
+      
+      
+      <MDBNavbarNav right>
+        <MDBNavItem>
+          <MDBFormInline waves>
+            <div className="md-form my-0">
+              <input className="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search" />
+            </div>
+          </MDBFormInline>
+        </MDBNavItem>
+      </MDBNavbarNav>
+
+      
+
+    </MDBCollapse>
+  </MDBNavbar>
+</Router>
+
   )
 }
 

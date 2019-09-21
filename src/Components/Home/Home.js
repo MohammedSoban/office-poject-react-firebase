@@ -9,9 +9,9 @@ import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import SwipeableViews from 'react-swipeable-views';
 import { autoPlay } from 'react-swipeable-views-utils';
 import Header from '../Header/Header';
-
+import firebase from '../Config/config.js'
 import Navigation from '../Navigation/Navigation';
-
+import Footer from '../Footer/Footer'
 
 
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
@@ -89,10 +89,15 @@ function SwipeableTextMobileStepper() {
     setActiveStep(step);
   }
 
+ 
+
   return (
-      <React.Fragment>
+     
+   <React.Fragment>
+
          <Header/>
-        {/* <Navigation/> */}
+        
+
    
     <div className={classes.root}>
         
@@ -119,6 +124,10 @@ function SwipeableTextMobileStepper() {
       </AutoPlaySwipeableViews>
       
     </div>
+
+    
+   
+    <Footer/>
     </React.Fragment>
   );
 }

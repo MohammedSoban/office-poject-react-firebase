@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { makeStyles, fade } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import Card from '@material-ui/core/Card';
@@ -33,9 +33,21 @@ import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import { maxWidth, fontSize } from '@material-ui/system';
 import Steel from './steel.png'
+import Eye from './eye.png'
 import Lock from './lock.png'
 import {withRouter} from 'react-router-dom'
 import Header from '../Header/Header'
+import { EEXIST } from 'constants';
+import firebase from '../Config/config.js'
+
+import InputAdornment from '@material-ui/core/InputAdornment';
+
+
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
+
+
+
 
 
 
@@ -43,15 +55,12 @@ const useStyles = makeStyles(theme => ({
   card: {
     marginTop:'5%',
     background: 'white',
-    width:'25%',
-    height:'50%',
-    marginLeft:'3%',
-    
-  
+    maxWidth: 360,
+    margin:'auto'
   },
 
   root: {
-    padding: theme.spacing(3),
+    padding: theme.spacing(1),
     height:'100vh',
     backgroundImage: `url(${Steel})`
   },
@@ -83,21 +92,25 @@ const useStyles = makeStyles(theme => ({
   },
 
   button:{
-  marginBottom:'3%',
+  //marginBottom:'3%',
+  fontSize:'100%',
+  margin:'auto',
 
   
   },
 
   textField:{
-    marginBottom:'5%',
-    maxWidth:'150%',
+    marginTop:'3%',
+    margin:'auto',
 
+    marginBottom:'5%',
+   // maxWidth:'150%',
+    width:'100%'
     
     },
 
     logo:{
       //backgroundImage: `url('${LockLogo}')`,
-     
       paddingTop:'20%'
   }
 
@@ -113,17 +126,70 @@ const useStyles = makeStyles(theme => ({
   const classes = useStyles();
  
   
-  //const [expanded, setExpanded] = React.useState(false);
+  const [userLogin, setuserLogin] = React.useState({
 
- 
+    email:'',
+    password:'',
+    Credentials:true,
+    showPassword: false,
+
+  });
+
+  
+
+  const handleClickShowPassword = () => {
+    setuserLogin({ ...userLogin, showPassword: !userLogin.showPassword });
+  };
+
+  const handleMouseDownPassword = event => {
+    event.preventDefault();
+  };
+  
+  const handleChange = name => event => {
+    setuserLogin({ ...userLogin, [name]: event.target.value });
+  
+  };
+
 function goto(path){
       props.history.push(path)
-//props.history.push(path)
-
   }
 
+function signIn(e){
+ 
+  
+
+  firebase.auth().signInWithEmailAndPassword(userLogin.email, userLogin.password).then(Response=>{
+  
+   console.log('after login '+Response.user.uid)
+
+  alert('login successful!')
+
+    goto('/')
+  
+
+   }).catch(function(error) {
+   
+   
+    var errorCode = error.code;
+    var errorMessage = error.message;
+  
+    setuserLogin({Credentials:false,
+                  email:'',
+                password:'',})
+  
+
+   
+    alert('error code: '+ errorCode+  '  error:'+errorMessage)
+ 
+  });
+ 
   
   
+}
+
+
+
+const isEnabled =   userLogin.email.length > 0 && userLogin.password.length > 0;
 
   return (
 
@@ -131,42 +197,108 @@ function goto(path){
      <Header/>
  <Paper className={classes.root}>
 
-        <Typography >
+      
     
         <Card className={classes.card}>
 
         <CardContent>
          
         <div><img src={Lock} width='80px' height='80px'/></div>
-        
-
+        {/* email 1 */}
+       { userLogin.Credentials ?(
           <div className={classes.textField} >
             <TextField
               id="outlined-email-input"
               label="Email"
+              value={userLogin.email}
               className={classes.textField}
               type="email"
-              name="email"
+              onChange={handleChange('email')}
               autoComplete="email"
               margin="normal"
               variant="outlined"
+             
             />
 
-            <TextField
-              id="outlined-password-input"
-              label="Password"
-              className={classes.textField}
-              type="password"
-              autoComplete="current-password"
-              margin="normal"
-              variant="outlined"
-            />
+    
+   {/* pass 1 */}
+<TextField
+        id="outlined-adornment-password"
+        className={clsx(classes.margin, classes.textField)}
+        variant="outlined"
+        type={userLogin.showPassword ? 'text' : 'password'}
+        label="Password"
+        value={userLogin.password}
+        onChange={handleChange('password')}
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton
+                edge="end"
+                aria-label="toggle password visibility"
+                onClick={handleClickShowPassword}
+                onMouseDown={handleMouseDownPassword}
+              >
+                {userLogin.showPassword ? <VisibilityOff /> : <Visibility />}
+              </IconButton>
+            </InputAdornment>
+          ),
+        }} 
+      /></div>):(
 
-          </div>
+                <div className={classes.textField} >
+                  {/* email 2 */}
+                 <TextField
+        error
+        id="outlined-error"
+        label="Email"
+        value={userLogin.email}
+        type="email"
+        onChange={handleChange('email')}
 
+        className={classes.textField}
+        autoComplete="email"
+        margin="normal"
+        variant="outlined"
+      />
+{/* passs2 */}
+                <TextField 
+        error
+        id="outlined-error"
+        label="password"
+        type={userLogin.showPassword ? 'text' : 'password'}
+        value={userLogin.password}
+        defaultValue="Hello World"
+        onChange={handleChange('password')}
+        autoComplete="current-password"
+        className={classes.textField}
+        margin="normal"
+        variant="outlined"
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton
+                edge="end"
+                aria-label="toggle password visibility"
+                onClick={handleClickShowPassword}
+                onMouseDown={handleMouseDownPassword}
+              >
+                {userLogin.showPassword ? <VisibilityOff /> : <Visibility />}
+              </IconButton>
+            </InputAdornment>
+          ),
+        }}
+      /></div>) }
+     
+          
+         
 
           <div className={classes.button}>
-            <Button color="primary" className={classes.button}>
+            <Button color="primary" className={classes.button}
+            onClick={(event)=>signIn(event)}
+            disabled={!isEnabled}
+            //onProgress={()=>handleOnProgress()}
+            >
               LogIn
             </Button>
             <Button color="secondary" className={classes.button}
@@ -178,7 +310,7 @@ function goto(path){
          
           </CardContent>
            </Card>
-           </Typography>
+
            </Paper>
            </React.Fragment>
 
