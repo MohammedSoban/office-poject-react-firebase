@@ -179,7 +179,7 @@ db.collection("Products").get().then((snapshot)=>{
      this.state.products.map((product,index)=>{
        return(
         
-    <Grid.Column padded={2}> 
+    <Grid.Column padded={2} > 
  <Link to={'productView/'+ product.product_id}>
      <Card.Group>
       
@@ -187,7 +187,7 @@ db.collection("Products").get().then((snapshot)=>{
       className={classes.Card}
       centered={true}
     // fluid={true}
-    //onClick
+    onClick
      color='olive'
    
      >

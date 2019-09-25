@@ -2,8 +2,72 @@ import React, { Component } from 'react';
 import firebase from '../Config/config.js'
 import ImageGallery from 'react-image-gallery';
 import "react-image-gallery/styles/css/image-gallery.css";
-import { Card, Icon, Image } from 'semantic-ui-react'
-import { style } from '@material-ui/system';
+
+import { style, typography } from '@material-ui/system';
+import {withStyles } from '@material-ui/core/styles';
+import Headers from '../Header/Header'
+import Footer from '../Footer/Footer'
+import ReactImageMagnify from 'react-image-magnify';
+//import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import Loader from 'react-loader-spinner'
+import Typography from '@material-ui/core/Typography';
+import { Grid, Image,Card } from 'semantic-ui-react'
+import { Tab ,Table} from 'semantic-ui-react'
+import { Button, Comment, Form, Header } from 'semantic-ui-react'
+import Commentss from './Comments'
+import { FacebookProvider, Comments,CommentsCount } from 'react-facebook';
+
+const styles = theme => ({
+    root: {
+      flexGrow: 1,
+    },
+    paper: {
+      marginTop:"2%",
+    //  paddingBottom:"2%",
+      height: 400,
+      width: 400,
+      margin:'auto',
+      
+    },
+    control: {
+      padding: theme.spacing(2),
+    },
+    img: {
+     
+      display: 'block',
+       height:150,
+      overflow: 'hidden',
+      width: '100%',
+      //display: 'block'
+  
+    },
+    CardContentGallery: {
+        //marginTop:'5%',
+       // marginLeft:'5%',
+        //background: 'white',
+        height:800,
+        maxWidth: 1000,
+       // margin:'auto'
+      
+       
+      },
+    Card: {
+        marginTop:'5%',
+        marginLeft:'5%',
+        background: 'white',
+        height:600,
+        maxWidth: 1000,
+        display: 'flex',
+       
+       // margin:'auto'
+      },
+      headings:{
+        height:50,
+        maxWidth: 100,
+        
+      }
+  });
 
 class ProductView extends Component {
 
@@ -11,7 +75,9 @@ class ProductView extends Component {
     state={
         id:null,
         product:{},
-        images:[{}]
+        images:[{}],
+        loaderVisible:true,
+        showTable:true
     }
 
 componentDidMount(){
@@ -56,8 +122,24 @@ docRef.get().then(function(doc) {
 
    console.log(that.state.images)
 
-var realImages=[{}]
 
+
+if(that.state.images.length===tempImages.length){
+
+ that.setState({
+     loaderVisible:false
+ })
+}
+
+
+console.log(obj.productSpecification.length)
+
+if(obj.productSpecification.length===0){
+  that.state.product.productSpecification.push('N/A')
+  that.setState({
+    showTable:false
+  })
+}
 
     } else {
         // doc.data() will be undefined in this case
@@ -71,53 +153,158 @@ var realImages=[{}]
 
 
 
-
-
-// for(index=0;index<=this.state.product.imageUrls.length;index++){
-// images[index].original=this.state.product.imageUrls[index]
-// images[index].thumbnail=this.state.product.imageUrls[index]
-// }
-
 }
 
     render() {
-        const images = [
-            {
-              original:this.state.product.imageUrls,
-              thumbnail: this.state.product.imageUrls,
-            },
-            {
-              original: 'https://picsum.photos/id/1015/1000/600/',
-              thumbnail: 'https://picsum.photos/id/1015/250/150/',
-            },
-            {
-              original: 'https://picsum.photos/id/1019/1000/600/',
-              thumbnail: 'https://picsum.photos/id/1019/250/150/',
-            },
-          ];
-      
+   
+        const { classes } = this.props
+
         return (
         
+<React.Fragment>
 
+<Headers/>
 
-<Card
-centered={true}
-><Card.Content>
+{
 
-              
-              <ImageGallery
+    this.state.loaderVisible?(
+<Loader 
+    type="ThreeDots"
+    color="green"
+    height={100}
+    width={100}
+    visible={this.state.loaderVisible}
+    //3 secs 
+    ></Loader>
+    ):(
+
+        <React.Fragment>
+
+<Grid celled='internally'>
+    <Grid.Row>
+      <Grid.Column width={3}>
+        <Image src='https://react.semantic-ui.com/images/wireframe/image.png' />
+      </Grid.Column>
+      <Grid.Column width={10}>
+      
+      <ImageGallery
                 items={this.state.images}
                 showIndex={true}
+                //lazyLoad={true}
                // onImageLoad={true}
                // useBrowserFullscreen={false}
         // showFullscreenButton={true} 
+        showPlayButton={false}
         
-         showThumbnails={true} />
-               
-</Card.Content>
-</Card>
+       //showNav={false}
+    
+         />
+      </Grid.Column>
+      <Grid.Column width={3}>
+        <Image src='https://react.semantic-ui.com/images/wireframe/image.png' />
+      </Grid.Column>
+    </Grid.Row>
+
+    <Grid.Row centered={true}> 
+     
+      <Grid.Column width={10}>
+      <Typography variant='h3' display='block'>
+        {this.state.product.productName}
+        </Typography>
+        <br/>
+     
+          <br/>
+        <Typography variant='h4' display='block'>
+        Product Detail
+        </Typography>
+        <Typography variant='body1' display='block'>
+        {this.state.product.productDetails}
+        </Typography>
+
+
+
+
+
+   
+
+  <Table unstackable>
+    <Table.Header>
+      <Table.Row>
+      <Table.HeaderCell>Specification</Table.HeaderCell>
+        
+        <Table.HeaderCell>Detail</Table.HeaderCell>
+        
+      </Table.Row>
+    </Table.Header>
+{
+
+this.state.showTable?(
+  this.state.product.productSpecification.map(spec=>{
+  return(
+    <Table.Body>
+      <Table.Row>
+      <Table.Cell>
+      {spec.specificationName}
+
+      </Table.Cell>
+        <Table.Cell>
+        {spec.specificationDetail}
+        </Table.Cell>
+        
+      </Table.Row>
+    </Table.Body>
+      )
+    })
+):(this.state.product.productSpecification.map(spec=>{
+  return(
+    <Table.Body>
+      <Table.Row>
+      <Table.Cell>
+      N/A
+      </Table.Cell>
+
+        <Table.Cell>
+        N/A
+        </Table.Cell>
+        
+      </Table.Row>
+    </Table.Body>
+      )
+    }))
+  }
+  </Table>
+
+
+
+
+      </Grid.Column>
+  
+    </Grid.Row>
+
+    <Grid.Row centered={true}>
+    <Grid.Column width={10}>
+
+    <FacebookProvider appId="123456789">
+        <CommentsCount href="http://www.facebook.com" />
+      </FacebookProvider>
+
+      </Grid.Column> 
+    </Grid.Row>
+
+  </Grid>
+
+<Footer/>
+</React.Fragment>
+    )
+  
+}
+
+
+
+
+</React.Fragment>
         );
     }
 }
 
-export default ProductView;
+export default withStyles(styles)(ProductView);

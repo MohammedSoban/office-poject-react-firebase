@@ -26,6 +26,7 @@ import {
 MDBDropdown, MDBDropdownToggle, MDBDropdownMenu, MDBDropdownItem,MDBIcon
   } from "mdbreact";
   import { BrowserRouter as Router } from 'react-router-dom';
+import MsfLogo from './msfLogo.png'
 
 
 const styles =(theme => ({
@@ -252,12 +253,24 @@ constructor(props)
   <Router>
   <MDBNavbar color='unique-color-dark'  dark expand="md"
   double={true}
-  scrolling={true}
->
- 
+
+  //scrolling={true}
+
+ >
+
+
+<MDBNavbarBrand onClick={()=>this.goto('/')} >
+<MDBNavLink href="/" >
+      <img src={MsfLogo}  height='50' />
+      </MDBNavLink>
+    </MDBNavbarBrand>
+   
+
+
     <MDBNavbarBrand>
       <strong className="white-text">MOON STEEL FABRICATORS</strong>
     </MDBNavbarBrand>
+
     <MDBNavbarToggler onClick={this.toggleCollapse} />
     <MDBCollapse id="navbarCollapse3" isOpen={this.state.isOpen} navbar>
       <MDBNavbarNav right>
@@ -281,7 +294,8 @@ constructor(props)
         </MDBNavItem>
 
         
-
+        
+        
 {this.state.isUserloggedIn ? (  <MDBNavItem>
   <MDBDropdown>
     <MDBDropdownToggle nav caret>

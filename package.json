@@ -33,8 +33,10 @@
     "react-bootstrap": "^1.0.0-beta.12",
     "react-circular-progressbar": "^2.0.2",
     "react-dom": "^16.8.6",
+    "react-facebook": "^8.0.4",
     "react-grid-uploader": "^1.0.2",
     "react-image-gallery": "^0.9.1",
+    "react-image-magnify": "^2.7.4",
     "react-images-upload": "^1.2.7",
     "react-images-uploader": "^1.2.0-rc1",
     "react-loader-spinner": "^3.1.4",
@@ -49,6 +51,7 @@
     "react-ui-cards": "^2.0.0",
     "resize-observer-polyfill": "^1.5.1",
     "semantic-ui-react": "^0.88.1",
+    "simple-react-comments": "^1.1.0",
     "write-file-atomic": "^3.0.0"
   },
   "scripts": {
