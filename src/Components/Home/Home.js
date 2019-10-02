@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import MobileStepper from '@material-ui/core/MobileStepper';
 import Paper from '@material-ui/core/Paper';
@@ -8,11 +8,15 @@ import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import SwipeableViews from 'react-swipeable-views';
 import { autoPlay } from 'react-swipeable-views-utils';
-import Header from '../Header/Header';
+import Headers from '../Header/Header';
 import firebase from '../Config/config.js'
 import Navigation from '../Navigation/Navigation';
 import Footer from '../Footer/Footer'
-
+import { Grid, Image } from 'semantic-ui-react'
+import { Container, Header } from 'semantic-ui-react'
+import ProductPictures from '../Clients/ProductPictures'
+import { Card, Icon} from 'semantic-ui-react'
+import { withStyles } from '@material-ui/core/styles';
 
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
@@ -46,67 +50,86 @@ const tutorialSteps = [
   },
 ];
 
-const useStyles = makeStyles(theme => ({
+
+
+
+const styles = theme => ({
   root: {
-   maxWidth:"100%",
-    flexGrow: 1,
-    //marginLeft:'18%',
-   // marginTop:'2%',
-   
-  },
-  header: {
-    display: 'flex',
-    alignItems: 'center',
-    height: 50,
-    paddingLeft: theme.spacing(4),
-    backgroundColor: theme.palette.background.default,
-  },
-  img: {
-    height: 470,
-    display: 'block',
-    maxWidth: 'auto',
-    overflow: 'hidden',
-    width: '100%',
-  },
+    maxWidth:"100%",
+     flexGrow: 1,
+     //marginLeft:'18%',
+    // marginTop:'2%',
+    
+   },
+   header: {
+     display: 'flex',
+     alignItems: 'center',
+     height: 50,
+     paddingLeft: theme.spacing(4),
+     backgroundColor: theme.palette.background.default,
+   },
+   img: {
+     height: 470,
+     display: 'block',
+     maxWidth: 'auto',
+     overflow: 'hidden',
+     width: '100%',
+   },
+});
+
+
+
+
+class SwipeableTextMobileStepper extends Component {
+ // const classes = useStyles();
+ // const theme = useTheme();
+ constructor(props) {
+  super(props);
   
-}));
-
-function SwipeableTextMobileStepper() {
-  const classes = useStyles();
-  const theme = useTheme();
-  const [activeStep, setActiveStep] = React.useState(0);
-  const maxSteps = tutorialSteps.length;
-
-  function handleNext() {
-    setActiveStep(prevActiveStep => prevActiveStep + 1);
+  this.state = {
+    activeStep:0,
+    //emailSent:false ,
+    open:false  
   }
 
-  function handleBack() {
-    setActiveStep(prevActiveStep => prevActiveStep - 1);
-  }
 
-  function handleStepChange(step) {
-    setActiveStep(step);
+}
+ // const [activeStep, setActiveStep] = React.useState(0);
+
+
+
+
+     handleStepChange=step=>{
+    
+      
+    this.setState({
+      activeStep:step
+    })
+    
   }
 
  
+  render() {
+
+    const { classes } = this.props
+    const maxSteps = tutorialSteps.length;
 
   return (
      
    <React.Fragment>
 
-         <Header/>
+         <Headers/>
         
-
+    
    
     <div className={classes.root}>
         
     
        
       <AutoPlaySwipeableViews
-        axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-        index={activeStep}
-        onChangeIndex={handleStepChange}
+        axis={styles.direction === 'rtl' ? 'x-reverse' : 'x'}
+        index={this.state.activeStep}
+        onChangeIndex={()=>this.handleStepChange()}
         enableMouseEvents
       >
           
@@ -114,7 +137,7 @@ function SwipeableTextMobileStepper() {
             
           <div key={step.label}>
               
-            {Math.abs(activeStep - index) <= 4 ? (
+            {Math.abs(0 - index) <= 4 ? (
               <img className={classes.img} src={step.imgPath} alt={step.label} />             
             ) : null}
             
@@ -125,11 +148,80 @@ function SwipeableTextMobileStepper() {
       
     </div>
 
-    
+    <Grid celled='internally' stackable={true} >
+    <Grid.Row  >
+      <Grid.Column width={3}>
+        <h1>Clients</h1>
+      
+        <ProductPictures/>
+      </Grid.Column>
+      <Grid.Column width={10} textAlign='left' >
+      <Container text textAlign='left'>
+    <Header as='h1'>Company Overview</Header>
+    <p>
+    Moon Steel Fabricators are pioneers in steel fabrication in Pakistan. We are the leading manufacturers of customized stainless steel equipment, particularly for commercial kitchens, laboratories, hotels and restaurants, etc.
+</p>
+<p>
+The portfolio for MSF includes major names such as Serena Hotel Islamabad, Shaikh Zayed Palaces across Pakistan as well as kitchen equipment for every Pizza Hut branch in Pakistan.
+</p>
+<p>
+The ethos of the company lay utmost emphasize on quality, durability by using the latest technological tools at its disposal, to ensure that the client always gets their money’s worth.
+    </p>
+
+<br/>
+    <Header as='h1'>History</Header>
+    <p>Established back in 1947, the Moon Steel Fabricators (MSF) produced its first steel project in 1974. During the last 36 years, the 
+      MSF has on its credit the production for the leading organizations in the country.</p>
+
+      <br/>
+      <Header as='h1'>Services</Header>
+      <li>
+        Plannig
+      </li>
+      <li>
+      Designing and Drawing
+      </li>
+<li>
+Designing and Drawing
+</li>
+<li>
+Fabrication
+</li>
+    </Container>
+
+
+      </Grid.Column>
+      <Grid.Column width={3}>
+      <Card centered={true}>
+    <Image src='https://react.semantic-ui.com/images/avatar/large/matthew.png' wrapped ui={false} />
+    <Card.Content>
+      <Card.Header>Matthew</Card.Header>
+      <Card.Meta>
+        <span className='date'>Joined in 2015</span>
+      </Card.Meta>
+      <Card.Description>
+        Matthew is a musician living in Nashville.
+      </Card.Description>
+    </Card.Content>
+    <Card.Content extra>
+      <a>
+        <Icon name='user' />
+        22 Friends
+      </a>
+    </Card.Content>
+  </Card>
+      </Grid.Column>
+    </Grid.Row>
+    </Grid>
    
+   
+
+
     <Footer/>
+  
     </React.Fragment>
   );
+            }
 }
 
-export default SwipeableTextMobileStepper;
+export default withStyles(styles)(SwipeableTextMobileStepper);

@@ -42,10 +42,11 @@ exports.sendWelcomeEmail = functions.auth.user().onCreate((user) => {
 // [END onCreateTrigger]
   // [START eventAttributes]
   const email = user.email; // The email of the user.
+  const displayName = user.displayName;
  // The display name of the user.
   // [END eventAttributes]
 
-  return sendWelcomeEmail(email);
+  return sendWelcomeEmail(email, displayName);
 });
 // [END sendWelcomeEmail]
 
@@ -57,8 +58,59 @@ exports.sendWelcomeEmail = functions.auth.user().onCreate((user) => {
 
 // [END sendByeEmail]
 
+
+exports.sendQuery = functions.firestore
+    .document('Queries/{QueriesId}')
+    .onCreate((snap, context) => {
+      // Get an object representing the document
+      // e.g. {'name': 'Marie', 'age': 66}
+      const newValue = snap.data();
+
+      // access a particular field as you would any JS property
+      const name = newValue.name;
+      const email = newValue.email;
+      const subject = newValue.subject;
+      const message = newValue.message;
+
+      // perform desired operations ...
+      return sendQueryEmail(name,email,subject,message);
+    });
+///////////////////////////
+exports.sendReference = functions.firestore
+
+    .document('Queries/{QueriesId}')
+    .onCreate((snap, context) => {
+      // Get an object representing the document
+      // e.g. {'name': 'Marie', 'age': 66}
+      const newValue = snap.data();
+       
+      // access a particular field as you would any JS property
+      const referenceID= context.params.QueriesId
+      const name = newValue.name;
+      const email = newValue.email;
+      // perform desired operations ...
+      return sendReferenceEmail(email,referenceID,name);
+    });
+
+///////////////////
+
+////here
+exports.closeQuery = functions.firestore
+    .document('Queries/{QueriesId}')
+    .onDelete((snap, context) => {
+      // Get an object representing the document prior to deletion
+      // e.g. {'name': 'Marie', 'age': 66}
+      const deletedValue = snap.data();
+      const referenceID= context.params.QueriesId
+      const name = deletedValue.name;
+      const email = deletedValue.email;
+      // perform desired operations ...
+      return sendQueryCloseEmail(email,referenceID,name);
+    });
+
+
 // Sends a welcome email to the given user.
-async function sendWelcomeEmail(email) {
+async function sendWelcomeEmail(email, displayName) {
   const mailOptions = {
     from: `${APP_NAME} <noreply@firebase.com>`,
     to: email,
@@ -66,7 +118,7 @@ async function sendWelcomeEmail(email) {
 
   // The user subscribed to the newsletter.
   mailOptions.subject = `Welcome to ${APP_NAME}!`;
-  mailOptions.text = `Hey ! Welcome to ${APP_NAME}. I hope you will enjoy our service.`;
+  mailOptions.text = `Hey ${displayName || ''}!, We confirm that we have deleted your ${APP_NAME} account.`;
   await mailTransport.sendMail(mailOptions);
   console.log('New welcome email sent to:', email);
 
@@ -74,6 +126,61 @@ async function sendWelcomeEmail(email) {
 }
 
 
+async function sendQueryEmail(name,email,subject,message) {
+  const mailOptions = {
+    from:`${email}`,
+    to: 'mohammedsoban1@gmail.com',
+  };
+
+  // The user subscribed to the newsletter.
+  mailOptions.subject = `Query ${subject}`;
+  mailOptions.text = `${name} says "${message}"  reply me back on ${email}`;
+  await mailTransport.sendMail(mailOptions);
+  console.log('New welcome email sent to:', email);
+
+  return null;
+}
+
+////////////////////////
+async function sendReferenceEmail(email,referenceID,name) {
+  const mailOptions = {
+    from:`MoonSteelFab`,
+    to: `${email}`,
+  };
+
+  // The user subscribed to the newsletter.
+  mailOptions.subject = `MoonSteelFab: your query has been successfully posted`;
+  mailOptions.text = `Dear ${name}, 
+  
+  your query refernce ID is:${referenceID}
+
+  this is an automated email don't reply Thankyou!`;
+  await mailTransport.sendMail(mailOptions);
+  console.log('New welcome email sent to:', email);
+
+  return null;
+}
+
+/////here
+async function sendQueryCloseEmail(email,referenceID,name) {
+  const mailOptions = {
+    from:`MoonSteelFab`,
+    to: `${email}`,
+  };
+
+  // The user subscribed to the newsletter.
+  mailOptions.subject = `MoonSteelFab: your query has been closed`;
+  mailOptions.text = `Dear ${name}, 
+  
+  your query with refernce ID:${referenceID} has been closed.
+
+
+  this is an automated email don't reply Thank you!`;
+  await mailTransport.sendMail(mailOptions);
+  console.log('New welcome email sent to:', email);
+
+  return null;
+}
 
 
 

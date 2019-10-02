@@ -17,6 +17,7 @@ import { Tab ,Table} from 'semantic-ui-react'
 import { Button, Comment, Form, Header } from 'semantic-ui-react'
 import Commentss from './Comments'
 import { FacebookProvider, Comments,CommentsCount } from 'react-facebook';
+import ProductPicture from '../Clients/ProductPictures'
 
 const styles = theme => ({
     root: {
@@ -180,10 +181,12 @@ if(obj.productSpecification.length===0){
 
         <React.Fragment>
 
-<Grid celled='internally'>
+<Grid celled='internally'
+stackable>
     <Grid.Row>
       <Grid.Column width={3}>
-        <Image src='https://react.semantic-ui.com/images/wireframe/image.png' />
+        <h3>Clients</h3>
+        <ProductPicture/>
       </Grid.Column>
       <Grid.Column width={10}>
       
@@ -200,9 +203,7 @@ if(obj.productSpecification.length===0){
     
          />
       </Grid.Column>
-      <Grid.Column width={3}>
-        <Image src='https://react.semantic-ui.com/images/wireframe/image.png' />
-      </Grid.Column>
+    
     </Grid.Row>
 
     <Grid.Row centered={true}> 
@@ -293,14 +294,17 @@ this.state.showTable?(
 
   </Grid>
 
-<Footer/>
+
 </React.Fragment>
     )
   
 }
 
 
-
+{ !this.state.loaderVisible?(
+  <Footer/>
+  ):(<br/>)
+  }  
 
 </React.Fragment>
         );

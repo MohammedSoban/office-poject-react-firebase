@@ -42,11 +42,12 @@ import firebase from '../Config/config.js'
 
 import InputAdornment from '@material-ui/core/InputAdornment';
 
-
+import Loader from 'react-loader-spinner'
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
-
-
+import { user } from 'firebase-functions/lib/providers/auth';
+import PassReset from './PassReset'
+import { Buttons, Headers, Image, Modal } from 'semantic-ui-react'
 
 
 
@@ -132,13 +133,15 @@ const useStyles = makeStyles(theme => ({
     password:'',
     Credentials:true,
     showPassword: false,
+    loaderVisible:false,
 
   });
 
-  
+ 
 
   const handleClickShowPassword = () => {
     setuserLogin({ ...userLogin, showPassword: !userLogin.showPassword });
+    
   };
 
   const handleMouseDownPassword = event => {
@@ -147,19 +150,19 @@ const useStyles = makeStyles(theme => ({
   
   const handleChange = name => event => {
     setuserLogin({ ...userLogin, [name]: event.target.value });
-  
+    
   };
-
+ 
 function goto(path){
       props.history.push(path)
   }
-
-function signIn(e){
  
+function signIn(){
+ 
+  setuserLogin({loaderVisible:true})
   
-
   firebase.auth().signInWithEmailAndPassword(userLogin.email, userLogin.password).then(Response=>{
-  
+
    console.log('after login '+Response.user.uid)
 
   alert('login successful!')
@@ -175,7 +178,9 @@ function signIn(e){
   
     setuserLogin({Credentials:false,
                   email:'',
-                password:'',})
+                password:'',
+                loaderVisible:false
+              })
   
 
    
@@ -183,13 +188,14 @@ function signIn(e){
  
   });
  
-  
+
   
 }
 
 
 
-const isEnabled =   userLogin.email.length > 0 && userLogin.password.length > 0;
+
+//const isEnabled =   userLogin.email.length > 0 && userLogin.password.length > 0;
 
   return (
 
@@ -255,7 +261,7 @@ const isEnabled =   userLogin.email.length > 0 && userLogin.password.length > 0;
         value={userLogin.email}
         type="email"
         onChange={handleChange('email')}
-
+      
         className={classes.textField}
         autoComplete="email"
         margin="normal"
@@ -290,13 +296,13 @@ const isEnabled =   userLogin.email.length > 0 && userLogin.password.length > 0;
         }}
       /></div>) }
      
-          
-         
-
+      
+                         
           <div className={classes.button}>
+           
             <Button color="primary" className={classes.button}
-            onClick={(event)=>signIn(event)}
-            disabled={!isEnabled}
+            onClick={()=>signIn()}
+          //  disabled={!isEnabled}
             //onProgress={()=>handleOnProgress()}
             >
               LogIn
@@ -305,7 +311,19 @@ const isEnabled =   userLogin.email.length > 0 && userLogin.password.length > 0;
             onClick={()=>goto('/signup')}>
               Signup
              </Button>
+             <Loader 
+                                    type="ThreeDots"
+                                    color="green"
+                                    height={100}
+                                    width={100}
+                                    visible={userLogin.loaderVisible}
+                                    //3 secs 
+                                    ></Loader>
           </div>
+          
+          <PassReset/>
+          
+        
 
          
           </CardContent>

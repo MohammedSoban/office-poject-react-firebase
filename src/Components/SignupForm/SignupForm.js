@@ -24,6 +24,7 @@ import firebase from '../Config/config.js'
 import { database } from 'firebase';
 import {withRouter} from 'react-router-dom'
 import admin from 'firebase-admin';
+import { user } from 'firebase-functions/lib/providers/auth';
 
 
 //const functions = require('firebase-functions');
@@ -125,15 +126,23 @@ function RecipeReviewCard(props) {
      alert('field left empty')
    }
    else{
+   var that=this
    
     const db =firebase.firestore();
 
         firebase.auth().createUserWithEmailAndPassword(userData.email,userData.password) .then(response =>{// creating new user in auth
 
           debugger
-      
-
-         
+     
+          var user = firebase.auth().currentUser;
+let userName=userData.firstName+' '+userData.lastName
+          user.updateProfile({
+            displayName: userName,
+          }).then(function() {
+            // Update successful.
+          }).catch(function(error) {
+            // An error happened.
+          })
           
           let userId=response.user.uid
           if(userId!=null)
@@ -151,11 +160,12 @@ function RecipeReviewCard(props) {
              email:userData.email,
              password:userData.password,
              companyName:userData.companyName
+
           })
         .then(function() {
 
    
- 
+          
 
           firebase.auth().signOut().then(function() {// logging user out wehn sigup 
             // Sign-out successful.

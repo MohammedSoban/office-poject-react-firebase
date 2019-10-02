@@ -27,7 +27,7 @@ MDBDropdown, MDBDropdownToggle, MDBDropdownMenu, MDBDropdownItem,MDBIcon
   } from "mdbreact";
   import { BrowserRouter as Router } from 'react-router-dom';
 import MsfLogo from './msfLogo.png'
-
+import Loader from 'react-loader-spinner'
 
 const styles =(theme => ({
   button: {
@@ -132,13 +132,17 @@ class SearchAppBar extends Component{
 
 constructor(props) 
 { 
+
     super(props); 
 
    
 
     this.state={
       isUserloggedIn:false,
-      activeItem:'home'
+      activeItem:'home',
+      isAdminloggedIn:false,
+      userName:'',
+      loaderVisble:true
 }
 
 } 
@@ -151,38 +155,55 @@ constructor(props)
   }
 
   handleLogout=()=>{
+    
     const that = this;
+
     firebase.auth().signOut().then(function() {
       // Sign-out successful.
-      that.setState({isUserloggedIn:false});
+      that.setState({isUserloggedIn:false,
+      isAdminloggedIn:false});
+      //window.location.reload();
       alert('logout successful')
       console.log('iam if logout')
-      
+
+    that.props.history.push('/')
+
     }).catch(function(error) {
       // An error happened.
       alert(error)
       console.log('iam else logout')
     });
+
   }
   
+  
   componentDidMount=()=>{
-
-    const that = this;
-    var user = firebase.auth().currentUser;
-   // firebase.auth().onAuthStateChanged(function(user){
-      if (user) {
-        // User is signed in.   
+  
+   
     
-        console.log("i am if cdm "+ user.email+" "+user.uid )
-        that.setState({isUserloggedIn:true});
-      
-      } else {
+    const that = this;
+    //var user = firebase.auth().currentUser;
+    firebase.auth().onAuthStateChanged(function(user){
+      if (user) {
        
+        // User is signed in.   
+        console.log("i am if cdm "+ user.email+" "+user.uid )
+        console.log(user.displayName)
+        if(user.email==='mohammedsoban1@gmail.com'){
+          that.setState({isAdminloggedIn:true,loaderVisble:false})
+          
+        }
+        that.setState({isUserloggedIn:true,
+        userName:user.displayName,
+      loaderVisble:false});
+        
+      } else {
+      
         // No user is signed in.
        console.log("i am else cdm")
-        that.setState({isUserloggedIn:false});
+        that.setState({isUserloggedIn:false,loaderVisble:false});
       }
-    //});
+    });
     
     }
   toggleCollapse = () => {
@@ -250,6 +271,7 @@ constructor(props)
   //   </div>
   //   </React.Fragment>
   
+
   <Router>
   <MDBNavbar color='unique-color-dark'  dark expand="md"
   double={true}
@@ -261,13 +283,13 @@ constructor(props)
 
 <MDBNavbarBrand onClick={()=>this.goto('/')} >
 <MDBNavLink href="/" >
-      <img src={MsfLogo}  height='50' />
+      <img src={MsfLogo}  height='50'  />
       </MDBNavLink>
     </MDBNavbarBrand>
    
 
 
-    <MDBNavbarBrand>
+    <MDBNavbarBrand left>
       <strong className="white-text">MOON STEEL FABRICATORS</strong>
     </MDBNavbarBrand>
 
@@ -275,71 +297,103 @@ constructor(props)
     <MDBCollapse id="navbarCollapse3" isOpen={this.state.isOpen} navbar>
       <MDBNavbarNav right>
         <MDBNavItem onClick={()=>this.goto('/')} >
+          <h5>
           <MDBNavLink >Home</MDBNavLink>
+          </h5>
         </MDBNavItem>
         <MDBNavItem onClick={()=>this.goto('/products')}>
+        <h5>
           <MDBNavLink> Products</MDBNavLink>
+          </h5>
         </MDBNavItem>
 
        
         
-        <MDBNavItem>
+        <MDBNavItem onClick={()=>this.goto('/services')}>
+        <h5>
           <MDBNavLink href="/">Services</MDBNavLink>
+        </h5>
         </MDBNavItem>
-        <MDBNavItem>
+
+        <MDBNavItem onClick={()=>this.goto('/clients')}>
+        <h5>
           <MDBNavLink href="/">Clients</MDBNavLink>
+        </h5>
         </MDBNavItem>
         <MDBNavItem>
-          <MDBNavLink href="/">Contacts</MDBNavLink>
+
+        <MDBNavItem onClick={()=>this.goto('/contactUs')}>
+        <h5>
+
+          <MDBNavLink href="/">Contact us</MDBNavLink>
+        </h5>
         </MDBNavItem>
-
-        
-        
-        
-{this.state.isUserloggedIn ? (  <MDBNavItem>
-  <MDBDropdown>
-    <MDBDropdownToggle nav caret>
-      <MDBIcon icon="user" className="mr-1" />Profile
-    </MDBDropdownToggle>
-    <MDBDropdownMenu className="dropdown-default" right>
-      <MDBDropdownItem onClick={()=>this.handleLogout()}>Log out</MDBDropdownItem>
-    </MDBDropdownMenu>
-  </MDBDropdown>
-</MDBNavItem>):
-        (<MDBNavItem onClick={()=>this.goto('/login')}>
-        <MDBNavLink >Register Now</MDBNavLink>
-      </MDBNavItem>)
-         }
-
-
-
-      
-
-
-        <MDBNavItem>
-          <MDBDropdown>
-            <MDBDropdownToggle nav caret>
-              <span className="mr-2">Dropdown</span>
-            </MDBDropdownToggle>
-            <MDBDropdownMenu>
-              <MDBDropdownItem href="#!">Action</MDBDropdownItem>
-              <MDBDropdownItem href="#!">Another Action</MDBDropdownItem>
-              <MDBDropdownItem href="#!">Something else here</MDBDropdownItem>
-              <MDBDropdownItem href="#!">Something else here</MDBDropdownItem>
-            </MDBDropdownMenu>
-          </MDBDropdown>
         </MDBNavItem>
+        
+        
+        
+
+
+
+
+ 
+
       </MDBNavbarNav>
 
       
       
       <MDBNavbarNav right>
         <MDBNavItem>
-          <MDBFormInline waves>
-            <div className="md-form my-0">
-              <input className="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search" />
-            </div>
-          </MDBFormInline>
+          
+          {this.state.isUserloggedIn ? (  <MDBNavItem>
+  <MDBDropdown>
+  <h5>
+    <MDBDropdownToggle nav caret>
+      <MDBIcon icon="user" className="mr-1" />{this.state.userName}
+    </MDBDropdownToggle>
+      </h5>
+    <MDBDropdownMenu className="dropdown-default" right>
+      <MDBDropdownItem onClick={()=>this.handleLogout()}>Log out</MDBDropdownItem>
+    </MDBDropdownMenu>
+  </MDBDropdown>
+</MDBNavItem>):
+        (<MDBNavItem onClick={()=>this.goto('/login')}>
+          <h5>
+        <MDBNavLink >Register Now</MDBNavLink>
+        </h5>
+      </MDBNavItem>)
+         }
+
+
+
+        </MDBNavItem>
+     
+{this.state.isAdminloggedIn?(
+
+  <MDBNavItem>
+    <MDBDropdown>
+    <h5>
+  
+      <MDBDropdownToggle nav caret>
+      
+        <span className="mr-2">Actions</span>
+        
+      </MDBDropdownToggle>
+    </h5>
+      <MDBDropdownMenu>
+        <MDBDropdownItem onClick={()=>this.goto('/postProduct')}>Post Product</MDBDropdownItem>
+        <MDBDropdownItem onClick={()=>this.goto('/myusers')}>My users</MDBDropdownItem>
+        <MDBDropdownItem onClick={()=>this.goto('/queries')}>Queries</MDBDropdownItem>
+        <MDBDropdownItem href="#!">Something else here</MDBDropdownItem>
+        <MDBDropdownItem href="#!">Something else here</MDBDropdownItem>
+      </MDBDropdownMenu>
+    </MDBDropdown>
+  </MDBNavItem>
+  ):(null)
+  }
+  
+        <MDBNavItem>
+
         </MDBNavItem>
       </MDBNavbarNav>
 
@@ -348,8 +402,8 @@ constructor(props)
     </MDBCollapse>
   </MDBNavbar>
 </Router>
-
-  )
+)
+  
 }
 
 }

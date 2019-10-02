@@ -37,9 +37,11 @@ import ImageUploader from 'react-images-upload';
 import { DropzoneDialog } from 'material-ui-dropzone'
 import Loader from 'react-loader-spinner'
 import { Line, Circle } from 'rc-progress';
-import { thisTypeAnnotation } from '@babel/types';
+import { thisTypeAnnotation, throwStatement } from '@babel/types';
 import Header from '../Header/Header'
 import Footer from '../Footer/Footer'
+
+
 
 
 const styles = theme => ({
@@ -105,7 +107,7 @@ const styles = theme => ({
       },
 });
 
-class RecipeReviewCard extends Component {
+class EditProduct extends Component {
 
     constructor(props) {
         super(props);
@@ -113,6 +115,7 @@ class RecipeReviewCard extends Component {
 
 
         this.state = {
+            id:'',
             productName: '',
             productSpecification: [{
                 specificationName: '',
@@ -128,10 +131,60 @@ class RecipeReviewCard extends Component {
             progress:0,
             loaderVisible:false,
             disableUplodaButton:false,
-            fileNames:[]
+            fileNames:[],
+            
+          //  product:{}
                 
         }
 
+    }
+
+
+    componentDidMount(){
+        const db = firebase.firestore();
+        var that=this
+        const tempImages=[]
+    
+        let id =this.props.match.params.product_id
+       // debugger
+    
+       this.setState({
+           id:id
+       })
+    
+       var docRef = db.collection("Products").doc(id);
+    
+    docRef.get().then(function(doc) {
+        if (doc.exists) {
+            console.log("Document data:", doc.data());
+    
+            var obj={}
+    
+            obj=doc.data()
+    
+    
+           that.setState({
+             productName:obj.productName,
+             productPrice:obj.productPrice,
+             productDetails:obj.productDetails,
+             productSpecification:obj.productSpecification,
+             files:obj.fileNames,
+             imageUrls:obj.imageUrls
+           })
+        var index
+        var storageRef = firebase.storage().ref();
+        var listRef = storageRef.child(`images/thisisis`);
+
+        }
+
+    }).catch(function(error) {
+        console.log("Error getting document:", error);
+        alert(error)
+    })
+    
+
+    
+    
     }
 
 
@@ -195,12 +248,8 @@ class RecipeReviewCard extends Component {
 
     handleOnAddSpecs = () => {
 
-        if (this.state.addSpec == false) {
-            this.setState({
-                addSpec: true
-            })
-        }
-        else {
+      
+      
             this.setState({
 
                 productSpecification: [...this.state.productSpecification, {
@@ -211,7 +260,7 @@ class RecipeReviewCard extends Component {
             })
         }
 
-    }
+    
 
     handelOnDelete(event, index) {
 
@@ -223,15 +272,12 @@ class RecipeReviewCard extends Component {
         })
     }
 
-    allowAddSpec() {
-        this.setState({
-            addSpec: false
-        })
-    }
+  
 
     handelOnUpload() {
-
         const db = firebase.firestore();
+
+
         
         let { productName,
             //  files,
@@ -246,7 +292,7 @@ class RecipeReviewCard extends Component {
           var storageRef = firebase.storage().ref();
           var urls = [];
           var fileName=[]
-  
+          var holdAllImages=[]
           this.setState({
               loaderVisible:true,
               disableUplodaButton:true
@@ -267,11 +313,24 @@ class RecipeReviewCard extends Component {
                         console.log(fileName,'files name')
 
                       response.task.snapshot.ref.getDownloadURL().then((downloadURL) => {
-                          urls.push(downloadURL)
-                          
-                          console.log(urls)
+                       this.state.imageUrls.push(downloadURL)
+                      
+                     
+                    })
+
+                   
+                         // console.log(urls,'final urls')
                       }).then(()=>{
-                        
+                        //urls=urls.concat(this.state.imageUrls)
+                        console.log(this.state.imageUrls)
+                      //  var realUrls=this.state.imageUrls.concat(urls)
+                      //  urls=urls+this.state.afterDeleteImageHolder
+                     
+                    
+                    //   this.setState({
+                    //     imageUrls:this.state.imageUrls,
+                    //     fileNames:fileName
+                    //   })
                        
 
                           console.log(this.state.fileNames,'files name state')
@@ -283,15 +342,23 @@ class RecipeReviewCard extends Component {
                           console.log('sum=',sum)
   
                           console.log('second iteration')
-                          
-  
-                          if(this.state.files.length===sum){
-                         
-                            this.setState({
-                                imageUrls: urls,
-                                fileNames:fileName
-                              })
+                        
+                          console.log(this.state.imageUrls,'all images ouside if')
 
+                if(this.state.files.length===sum){
+                    //holdAllImages=urls.concat(this.state.imageUrls)
+                    this.setState({
+                        imageUrls:this.state.imageUrls,
+                        fileNames:fileName
+                      })
+                              console.log(this.state.imageUrls,'all images inside if')
+                          }
+
+                         
+                     //     console.log(this.state.imageUrls,'all images')
+                          if(this.state.files.length===sum){
+                          
+                           
                           let { productName,
                             files,
                              productSpecification,
@@ -315,31 +382,33 @@ class RecipeReviewCard extends Component {
                            // products.push(obj)
                    
                            var that = this;
-                   
-                               db.collection("Products").doc().set({
-               
-                                   productName:productName,
-                                   productSpecification:productSpecification,
-                                   imageUrls:imageUrls,
-                                   productPrice:productPrice,
-                                   productDetails:productDetails,
-                                   addSpec,
-                                   fileNames:fileNames,
-                        
-
-                               }).then(function() {
-                                
-                               
+                           console.log(imageUrls,'all images inside second if')
+                           var washingtonRef = db.collection("Products").doc(this.state.id);
+                                return washingtonRef.update({
+                                    productName:productName,
+                                    productSpecification:productSpecification,
+                                    productPrice:productPrice,
+                                    productDetails:productDetails,
+                                    addSpec,
+                                    fileNames:fileNames,
+                                    imageUrls:imageUrls,
+                                })
+                                .then(function() {
+                                    console.log("Document successfully updated!");
+                                   // console.log(that.state.imageUrls,'all images inside second if')
                                 that.setState({
                                     
                                     loaderVisible:false,
                                   disableUplodaButton:false,
                                   })
-                                   alert('Product successfuly uploaded')
-                               })
-                               .catch(function(error) {
-                               alert(error)
-                           })
+                                })
+                                .catch(function(error) {
+                                    // The document probably doesn't exist.
+                                    console.error("Error updating document: ", error);
+                                    alert(error)
+                                });
+
+                               
 
                           }
                       }).catch((error)=>{
@@ -349,7 +418,7 @@ class RecipeReviewCard extends Component {
                   })
   
                   
-          })
+          
           
          
         //  this.setState({ imageUrls: urls,})
@@ -443,6 +512,16 @@ class RecipeReviewCard extends Component {
         });
     }
 
+    handelOnDeleteImage=(index)=>{
+      
+        this.state.imageUrls.splice(index,1)
+  
+        this.setState({
+            imageUrls:this.state.imageUrls
+        })
+ 
+        console.log(this.state.imageUrls)
+    }
     render() {
         
         const { classes } = this.props
@@ -501,13 +580,23 @@ class RecipeReviewCard extends Component {
                             variant="outlined"
                         />
 
+                     {this.state.imageUrls.map((image,index)=>{
+                         return(
+                    
+                            <CardContent>
+                             <img src={image} widht='70' height='70'/>
+                             <IconButton aria-label="delete" className={classes.margin}
+                             onClick={() => this.handelOnDeleteImage(index)}>
+                             <DeleteIcon fontSize="large" />
+                         </IconButton>
+                         </CardContent>
+                         );
+                     })
+                     }
 
 
 
-
-                        {
-
-                        }
+                       
 
 
 
@@ -524,7 +613,7 @@ class RecipeReviewCard extends Component {
 
 
 
-                                    this.state.addSpec ? (
+                                   
                                         <div className={classes.container} key={index}>
                                             <TextField
                                                 id="outlined-name"
@@ -554,7 +643,7 @@ class RecipeReviewCard extends Component {
                                                 <DeleteIcon fontSize="large" />
                                             </IconButton>
                                         </div>
-                                    ) : (<br />)
+                                   
                                 )
                             })
                         }
@@ -621,4 +710,4 @@ class RecipeReviewCard extends Component {
     };
 }
 
-export default withStyles(styles)(RecipeReviewCard);
+export default withStyles(styles)(EditProduct);
