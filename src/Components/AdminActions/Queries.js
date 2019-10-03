@@ -103,7 +103,9 @@ class Queries extends Component {
   <Table.Cell>{query.name}</Table.Cell>
   <Table.Cell>{query.email}</Table.Cell>
   <Table.Cell><p>{query.message}</p></Table.Cell>
-   <Table.Cell>{query.created.seconds}</Table.Cell>
+   {/* <Table.Cell>{query.created ? new Date(query.created.seconds) : ''}</Table.Cell> */}
+   {/* <Table.Cell>{JSON.stringify(new Date(query.created))}</Table.Cell> */}
+   <Table.Cell>{new Date(query.created).getDate()} - {new Date(query.created).getMonth()+1}</Table.Cell>
   <Table.Cell><button class="ui primary button" onClick={()=>this.handleResponse(query.email)}>Respond</button></Table.Cell>
   <Table.Cell><button class="ui secondary button" onClick={()=>this.handleDelete(query.query_id,index)} >Close</button></Table.Cell>
  

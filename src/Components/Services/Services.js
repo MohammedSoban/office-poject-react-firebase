@@ -16,6 +16,7 @@ class Services extends Component {
            <h1>Services We Offer</h1>
             <Container text
             textAlign='justified'
+                
             
             >
     <Header as='h2'>Planing</Header>

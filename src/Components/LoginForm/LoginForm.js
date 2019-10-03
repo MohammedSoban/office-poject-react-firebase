@@ -34,7 +34,7 @@ import Grid from '@material-ui/core/Grid';
 import { maxWidth, fontSize } from '@material-ui/system';
 import Steel from './steel.png'
 import Eye from './eye.png'
-import Lock from './lock.png'
+import Lock from './Lock.png'
 import {withRouter} from 'react-router-dom'
 import Header from '../Header/Header'
 import { EEXIST } from 'constants';
