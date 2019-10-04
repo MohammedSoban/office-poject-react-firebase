@@ -5,9 +5,14 @@ import { width } from "@material-ui/system";
 
 const FooterPagePro = () => {
   return (
-    <div style={{  position:'relative',
-    width:'100%',
-    //marginTop:'20%'
+
+    
+    <div style={{ 
+     
+
+  
+  
+  
      /* Height of the footer */
       }}>
     <MDBFooter color='unique-color-dark' className="font-small pt-4 mt-4">
@@ -112,6 +117,7 @@ const FooterPagePro = () => {
       </MDBContainer>
     </MDBFooter>
     </div>
+    
   );
 }
 

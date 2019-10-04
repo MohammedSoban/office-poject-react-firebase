@@ -14,10 +14,10 @@ class Contact extends Component {
     super(props);
 
     this.state = {
-      name: 'Mohsin',
-      email: 'mohsinghani.777@gmail.com',
-      subject: 'Momo',
-      message: 'Test',
+      name: '',
+      email: '',
+      subject: '',
+      message: '',
       loaderVisible: false,
       emailSent: false
     }
@@ -28,6 +28,7 @@ class Contact extends Component {
   componentDidMount() {
     const db = firebase.firestore();
   }
+
   handleOnChange = (event) => {
 
     this.setState({
@@ -44,104 +45,84 @@ class Contact extends Component {
 
   uploadQuery = (event) => {
 
-    // var that = this
+    var that = this
 
-    // that.setState({
-    //   loaderVisible: true
-    // })
+    that.setState({
+      loaderVisible: true
+    })
 
-    // //  console.log(this.state.name)
+    //  console.log(this.state.name)
 
 
     const { name, email, subject, message } = this.state
 
     const db = firebase.firestore();
-    debugger
 
-    db.collection("cities").doc("LA").set({
-      name: "Los Angeles",
-      state: "CA",
-      country: "USA"
-    })
-      .then(() => {
-        debugger
-        console.log("Document successfully written!");
-      })
-      .catch((error) => {
-        debugger
-        console.error("Error writing document: ", error);
-      });
 
-    // return db.collection("Queries").doc().set({
-    //   name: name,
-    //   email: email,
-    //   subject: subject,
-    //   message: message,
-    //   // created:firebase.firestore.FieldValue.serverTimestamp(),
-    //   created: firebase.firestore.FieldValue.serverTimestamp()
 
-    // })
-    //   .then(() => {
-    //     debugger
-    // console.log("Document successfully written!");
-    // that.setState({
-    //   loaderVisible: false,
-    //   emailSent: true,
-    //   email: '',
-    //   name: '',
-    //   subject: '',
-    //   message: '',
-    // })
-    //   alert('Query has been successfuly sent to concerning department')
-    // })
-    // .catch((error) => {
-    //   debugger
-    //   console.error("Error writing document: ", error);
-    // that.setState({
-    //   loaderVisible: false,
-    // })
-    //   alert('unable to upload ', error)
-
-    // });
-    debugger
-  }
-
-  testing = () => {
-    this.setState({ loaderVisible: true })
-    // const db = firebase.firestore();
-    const db = new firebase.firestore()
-    const { name, email, subject, message } = this.state
-    // debugger
-    db.collection("Queries").doc().set({
+    return db.collection("Queries").doc().set({
       name: name,
       email: email,
       subject: subject,
       message: message,
-      created: new Date().getTime()
+      seen:false,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+     created: new Date().getTime()
+
     })
       .then(() => {
         debugger
-        this.clearState()
+        console.log("Document successfully written!");
+        that.setState({
+          loaderVisible: false,
+          emailSent: true,
+          email: '',
+          name: '',
+          subject: '',
+          message: '',
+        })
         alert('Query has been successfuly sent to concerning department')
       })
       .catch((error) => {
         debugger
-        // console.error("Error writing document: ", error);
-        this.setState({ loaderVisible: false })
+        console.error("Error writing document: ", error);
+        that.setState({
+          loaderVisible: false,
+        })
         alert('unable to upload ', error)
+
       });
+    debugger
   }
 
-  clearState = () => {
-    this.setState({
-      loaderVisible: false,
-      emailSent: true,
-      email: '',
-      name: '',
-      subject: '',
-      message: '',
-    })
-  }
+  // testing = () => {
+  //   this.setState({ loaderVisible: true })
+  //   // const db = firebase.firestore();
+  //   const db = new firebase.firestore()
+  //   const { name, email, subject, message } = this.state
+  //   // debugger
+  //   db.collection("Queries").doc().set({
+  //     name: name,
+  //     email: email,
+  //     subject: subject,
+  //     message: message,
+  //     created: new Date().getTime()
+  //   })
+  //     .then(() => {
+
+  //       this.clearState()
+  //       alert('Query has been successfuly sent to concerning department')
+  //     })
+  //     .catch((error) => {
+
+  //       // console.error("Error writing document: ", error);
+  //       this.setState({ loaderVisible: false })
+  //       alert('unable to upload ', error)
+  //     });
+  // }
+
+
+  // }
 
   render() {
 
@@ -212,11 +193,19 @@ class Contact extends Component {
                 </MDBRow>
               </form>
 
-              {this.state.emailSent ? (<p>Your qeury has been successfully posted thankyou!</p>)
+              {this.state.emailSent ? (<p>Your qeury has been successfully posted thank you!</p>)
 
                 : (<div className="text-center text-md-left">
+                  <Loader
+                    type="ThreeDots"
+                    color="green"
+                    height={100}
+                    width={100}
+                    visible={this.state.loaderVisible}
+                  //3 secs 
+                  ></Loader>
                   <MDBBtn color="primary" size="md"
-                    onClick={(event) => this.testing(event)}
+                    onClick={(event) => this.uploadQuery(event)}
                     disabled={!isEnabled}>
                     Send
            </MDBBtn>
@@ -224,14 +213,7 @@ class Contact extends Component {
                 )}
 
 
-              <Loader
-                type="ThreeDots"
-                color="green"
-                height={100}
-                width={100}
-                visible={this.state.loaderVisible}
-              //3 secs 
-              ></Loader>
+
 
             </MDBCol>
             <MDBCol md="3" className="text-center">
@@ -278,44 +260,51 @@ class Contact extends Component {
                   <Card.Meta>
                     <span className='date'>Marketing Manager</span>
                   </Card.Meta>
-                  <Card.Description>
-                    Matthew is a musician living in Nashville.
-      </Card.Description>
+          
                 </Card.Content>
                 <Card.Content extra>
 
 
-                  <a href="https://api.whatsapp.com/send?phone=923002276057">
+                  <h5>
+                    <a href="https://api.whatsapp.com/send?phone=923002276057">
 
-                    <Icon name='whatsapp' />
+
+
+                      <Icon name='whatsapp' />
+                      <strong>
+                        +92-300-2276057
+                   </strong>
+                    </a>
+                  </h5>
+
+
+                  <h5>
+                    <a href='tel:+92-300-2276057'>
+                      <Icon name='call' />
+                      <strong>
+                        +92-300-2276057
+                   </strong>
+                    </a>
+                  </h5>
+
+                  <h5>
+
+                    <a href='mailto:ovaiswaraich@gmail.com'>
+                      <Icon name='mail' />
+                      <strong>
+                        ovaiswaraich@gmail.com
+                    </strong>
+                    </a>
+                  </h5>
+
+
+                  <h5>
+
+                    <Icon name='graduation' />
                     <strong>
-                      +92-300-2276057
-        </strong>
-                  </a>
-                  <br />
-
-
-                  <a href='tel:+92-300-2276057'>
-                    <Icon name='call' />
-                    <strong>
-                      +92-300-2276057
-        </strong>
-                  </a>
-                  <br />
-
-                  <a href='mailto:ovaiswaraich@gmail.com'>
-                    <Icon name='mail' />
-                    <strong>
-                      ovaiswaraich@gmail.com
-        </strong>
-                  </a>
-
-                  <br />
-
-                  <Icon name='graduation' />
-                  <strong>
-                    MBA
-        </strong>
+                      MBA
+                    </strong>
+                  </h5>
 
                 </Card.Content>
               </Card >
@@ -330,13 +319,10 @@ class Contact extends Component {
                   <Card.Meta>
                     <span className='date'>C.E.O</span>
                   </Card.Meta>
-                  <Card.Description>
-                    Matthew is a musician living in Nashville.
-      </Card.Description>
                 </Card.Content>
                 <Card.Content extra>
 
-
+                <h5>
                   <a href="https://api.whatsapp.com/send?phone=92321822314">
 
                     <Icon name='whatsapp' />
@@ -344,15 +330,21 @@ class Contact extends Component {
                       +92-321-8228314
         </strong>
                   </a>
-                  <br />
-
-
+                  
+                </h5>
+                <h5>
                   <a href='tel:+92-321-8228314'>
                     <Icon name='call' />
                     <strong>
                       +92-321-8228314
         </strong>
                   </a>
+
+                </h5>
+             
+               
+
+
 
 
 
@@ -370,13 +362,12 @@ class Contact extends Component {
                   <Card.Meta>
                     <span className='date'>Marketing Manager</span>
                   </Card.Meta>
-                  <Card.Description>
-                    Matthew is a musician living in Nashville.
-      </Card.Description>
+        
                 </Card.Content>
                 <Card.Content extra>
 
-
+            <h5>
+              
                   <a href="https://api.whatsapp.com/send?phone=923002562246">
 
                     <Icon name='whatsapp' />
@@ -384,16 +375,19 @@ class Contact extends Component {
                       +92-300-2562246
         </strong>
                   </a>
-                  <br />
+                  
+            </h5>
 
-
+            <h5>
                   <a href='tel:+92-300-2562246'>
                     <Icon name='call' />
                     <strong>
                       +92-300-2562246
         </strong>
                   </a>
-                  <br />
+
+            </h5>
+            <h5>
 
                   <a href='mailto:arkhan2@hotmail.com'>
                     <Icon name='mail' />
@@ -402,12 +396,19 @@ class Contact extends Component {
         </strong>
                   </a>
 
-                  <br />
-
+            </h5>
+            <h5>
                   <Icon name='graduation' />
                   <strong>
                     MS
         </strong>
+
+            </h5>
+
+                 
+
+                 
+
 
                 </Card.Content>
               </Card >

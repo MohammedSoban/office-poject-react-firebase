@@ -239,9 +239,11 @@ desertRef.delete().then(function() {
     const {search,products}=this.state
 
   return (
-    <React.Fragment>
-      
-    <Header/>
+   
+     <React.Fragment>   
+        <Header/>
+ 
+   
                                    <Loader 
                                     type="ThreeDots"
                                     color="green"
@@ -250,8 +252,17 @@ desertRef.delete().then(function() {
                                     visible={this.state.loaderVisible}
                                     //3 secs 
                                     ></Loader>
-      
+
+
+                                 
+      <MDBCol md="12" >
+      <MDBInput
+      value={this.state.search} onChange={(event)=>this.handleOnSearch(event)} hint="Search" size='lg' type="text" containerClass="active-pink active-pink-2 mt-0 mb-3" />
+    </MDBCol>
     
+    <div style={{
+      minHeight:600
+    }}>
 {this.state.loaderVisibleOnDelete?(  
    <Loader 
   type="ThreeDots"
@@ -263,16 +274,16 @@ desertRef.delete().then(function() {
   ></Loader>):(     
    
 
+   
+
     <Grid doubling={true} columns={5}
  // container={true}
   padded={2}
   stackable={true}
   >
+      
     <br/>
-   <MDBCol md="12" >
-      <MDBInput
-      value={this.state.search} onChange={(event)=>this.handleOnSearch(event)} hint="Search" size='lg' type="text" containerClass="active-pink active-pink-2 mt-0 mb-3" />
-    </MDBCol>
+   
 {
   
 
@@ -346,17 +357,17 @@ desertRef.delete().then(function() {
     
     
   </Grid>
-
-)}     
- 
-{ !this.state.loaderVisible && !this.state.loaderVisibleOnDelete ?(
   
+)}     
+</div>
+{ !this.state.loaderVisible && !this.state.loaderVisibleOnDelete ?(
+ 
 <Footer/>
 
 ):(<br/>)
 }     
-     
-    </React.Fragment>
+
+</React.Fragment>
   );
                 }
 }

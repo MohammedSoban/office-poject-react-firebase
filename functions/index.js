@@ -152,6 +152,7 @@ async function sendReferenceEmail(email,referenceID,name) {
   mailOptions.subject = `MoonSteelFab: your query has been successfully posted`;
   mailOptions.text = `Dear ${name}, 
   
+
   your query refernce ID is:${referenceID}
 
   this is an automated email don't reply Thankyou!`;

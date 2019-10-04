@@ -85,6 +85,7 @@ class Clients extends Component {
     <Grid.Column width={3}
     //mobile={8}
       >
+              <h1>Clients</h1>
       <ProductPictures/>
 
       </Grid.Column>

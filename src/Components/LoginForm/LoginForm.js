@@ -34,7 +34,7 @@ import Grid from '@material-ui/core/Grid';
 import { maxWidth, fontSize } from '@material-ui/system';
 import Steel from './steel.png'
 import Eye from './eye.png'
-import Lock from './Lock.png'
+import Lock from './lock.png'
 import {withRouter} from 'react-router-dom'
 import Header from '../Header/Header'
 import { EEXIST } from 'constants';
@@ -131,7 +131,7 @@ const useStyles = makeStyles(theme => ({
 
     email:'',
     password:'',
-    Credentials:true,
+    Credentials:false,
     showPassword: false,
     loaderVisible:false,
 
@@ -163,11 +163,49 @@ function signIn(){
   
   firebase.auth().signInWithEmailAndPassword(userLogin.email, userLogin.password).then(Response=>{
 
-   console.log('after login '+Response.user.uid)
+    var user = firebase.auth().currentUser;
 
-  alert('login successful!')
+      if (user.emailVerified) {
+        console.log('after login '+Response.user.uid)
+        console.log(user.emailVerified)
 
-    goto('/')
+        alert('login successful!')
+        setuserLogin({loaderVisible:false})
+          goto('/')
+         
+        
+      } else {
+        console.log(user.emailVerified)
+
+        setuserLogin({
+          email:'',
+        password:'',
+      
+      })
+
+        // No user is signed in.
+        setuserLogin({loaderVisible:false})
+        setuserLogin({Credentials:false})
+       
+        user.sendEmailVerification().then(function() {
+          // Email sent.
+        }).catch(function(error) {
+          // An error happened.
+        });
+        alert('Please verify your account, verfication email has been sent to your email')
+        firebase.auth().signOut().then(function() {// logging user out wehn signup 
+          // Sign-out successful.
+          setuserLogin({loaderVisible:false})
+        }).catch(function(error) {
+          // An error happened.
+          console.log('user not logged out')
+          setuserLogin({loaderVisible:false})
+        });
+
+       
+      }
+
+    
   
 
    }).catch(function(error) {
@@ -176,7 +214,7 @@ function signIn(){
     var errorCode = error.code;
     var errorMessage = error.message;
   
-    setuserLogin({Credentials:false,
+    setuserLogin({Credentials:true,
                   email:'',
                 password:'',
                 loaderVisible:false
@@ -211,7 +249,7 @@ function signIn(){
          
         <div><img src={Lock} width='80px' height='80px'/></div>
         {/* email 1 */}
-       { userLogin.Credentials ?(
+     
           <div className={classes.textField} >
             <TextField
               id="outlined-email-input"
@@ -223,7 +261,7 @@ function signIn(){
               autoComplete="email"
               margin="normal"
               variant="outlined"
-             
+              error={userLogin.Credentials}
             />
 
     
@@ -236,6 +274,7 @@ function signIn(){
         label="Password"
         value={userLogin.password}
         onChange={handleChange('password')}
+        error={userLogin.Credentials}
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
@@ -250,51 +289,9 @@ function signIn(){
             </InputAdornment>
           ),
         }} 
-      /></div>):(
+      /></div>
 
-                <div className={classes.textField} >
-                  {/* email 2 */}
-                 <TextField
-        error
-        id="outlined-error"
-        label="Email"
-        value={userLogin.email}
-        type="email"
-        onChange={handleChange('email')}
-      
-        className={classes.textField}
-        autoComplete="email"
-        margin="normal"
-        variant="outlined"
-      />
-{/* passs2 */}
-                <TextField 
-        error
-        id="outlined-error"
-        label="password"
-        type={userLogin.showPassword ? 'text' : 'password'}
-        value={userLogin.password}
-        defaultValue="Hello World"
-        onChange={handleChange('password')}
-        autoComplete="current-password"
-        className={classes.textField}
-        margin="normal"
-        variant="outlined"
-        InputProps={{
-          endAdornment: (
-            <InputAdornment position="end">
-              <IconButton
-                edge="end"
-                aria-label="toggle password visibility"
-                onClick={handleClickShowPassword}
-                onMouseDown={handleMouseDownPassword}
-              >
-                {userLogin.showPassword ? <VisibilityOff /> : <Visibility />}
-              </IconButton>
-            </InputAdornment>
-          ),
-        }}
-      /></div>) }
+                
      
       
                          

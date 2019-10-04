@@ -4,6 +4,8 @@ import Headers from '../Header/Header'
 import Footer from '../Footer/Footer'
 import Planning from './planning.jpg'
 import Customization from './customization.jpg'
+import { Grid } from 'semantic-ui-react'
+import ProductPictures from '../Clients/ProductPictures'
 
 class Services extends Component {
     render() {
@@ -13,16 +15,30 @@ class Services extends Component {
             <Headers/>
            <br/>
 
-           <h1>Services We Offer</h1>
+          
+           <Grid celled='internally'
+           //centered={true}
+           stackable
+           >
+    <Grid.Row >
+  
+    <Grid.Column width={3}
+    //mobile={8}
+      >
+              <h1>Clients</h1>
+              <ProductPictures/>
+
+      </Grid.Column>
+      <Grid.Column width={9} >
+      <h1>Services We Offer</h1>
             <Container text
-            textAlign='justified'
+            textAlign='left'
                 
             
             >
     <Header as='h2'>Planing</Header>
     <p>
-    The MSF fulfills requirements by planning according to different environment such as hospitals,
-     commercial kitchens, medical laboratories and restaurants with respect to their process or functionality.
+    The MSF fulfills requirements by planning according to different environment such as hospitals, commercial kitchens, medical laboratories and restaurants with respect to their process or functionality.
     </p>
     <Image src={Planning} width='700' height='300'/>
     <Header as='h2'>Designing and Drawing</Header>
@@ -42,6 +58,22 @@ class Services extends Component {
     Italy and America, which complete the most complex task with absolute precision and accuracy.
     </p>
   </Container>
+      </Grid.Column>
+   
+
+      <Grid.Column width={1}
+    //mobile={8}
+      >
+        
+
+      </Grid.Column>
+
+    </Grid.Row>
+
+          
+</Grid>
+
+           
 
 
             <Footer/>

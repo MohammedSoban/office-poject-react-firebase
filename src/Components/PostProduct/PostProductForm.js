@@ -337,7 +337,7 @@ class RecipeReviewCard extends Component {
                                   })
                                    alert('Product successfuly uploaded')
                                })
-                               .catch(function(error) {
+                               .catch((error)=>{
                                alert(error)
                            })
 

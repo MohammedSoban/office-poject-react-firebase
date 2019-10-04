@@ -17,6 +17,10 @@ import { Container, Header } from 'semantic-ui-react'
 import ProductPictures from '../Clients/ProductPictures'
 import { Card, Icon} from 'semantic-ui-react'
 import { withStyles } from '@material-ui/core/styles';
+import "react-alice-carousel/lib/alice-carousel.css";
+import AliceCarousel from 'react-alice-carousel';
+import "react-alice-carousel/lib/alice-carousel.css";
+import { Timestamp } from '@google-cloud/firestore';
 
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
@@ -89,7 +93,8 @@ class SwipeableTextMobileStepper extends Component {
   this.state = {
     activeStep:0,
     //emailSent:false ,
-    open:false  
+    open:false  ,
+    notices:[]
   }
 
 
@@ -97,7 +102,25 @@ class SwipeableTextMobileStepper extends Component {
  // const [activeStep, setActiveStep] = React.useState(0);
 
 
+componentDidMount=()=>{
 
+  const db=firebase.firestore()
+  var that=this
+
+  var noticeHolder=[]
+  db.collection("notice").orderBy('timestamp','desc').limit(5).get().then(function(querySnapshot) {
+    querySnapshot.forEach(function(doc) {
+        // doc.data() is never undefined for query doc snapshots
+        console.log(doc.id, " => ", doc.data());
+        noticeHolder.push({...doc.data(),query_id:doc.id})
+    });
+
+    that.setState({
+      notices:noticeHolder
+  })
+});
+
+}
 
      handleStepChange=step=>{
     
@@ -110,7 +133,7 @@ class SwipeableTextMobileStepper extends Component {
 
  
   render() {
-
+    const handleOnDragStart = e => e.preventDefault()
     const { classes } = this.props
     const maxSteps = tutorialSteps.length;
 
@@ -192,7 +215,35 @@ Fabrication
 
       </Grid.Column>
       <Grid.Column width={3}>
+
+
+
+
+
+ 
+    
+
       <Card centered={true}>
+    <Card.Content>
+      <Card.Header>Notice </Card.Header>
+    
+<br/>
+      <Card.Description>
+        welcome to our newly created website
+      </Card.Description>
+     
+    </Card.Content>
+  </Card>
+
+
+ 
+
+  
+
+
+
+
+      {/* <Card centered={true}>
     <Image src='https://react.semantic-ui.com/images/avatar/large/matthew.png' wrapped ui={false} />
     <Card.Content>
       <Card.Header>Matthew</Card.Header>
@@ -209,7 +260,7 @@ Fabrication
         22 Friends
       </a>
     </Card.Content>
-  </Card>
+  </Card> */}
       </Grid.Column>
     </Grid.Row>
     </Grid>

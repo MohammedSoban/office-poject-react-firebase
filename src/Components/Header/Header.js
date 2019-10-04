@@ -9,7 +9,7 @@ import { fade, makeStyles, getContrastRatio } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import Button from '@material-ui/core/Button';
-
+import { Icon } from 'semantic-ui-react'
 import MenuItem from '@material-ui/core/MenuItem';
 import {BrowserRouter,Redirect} from 'react-router-dom';
 import Navigation from '../Navigation/Navigation'
@@ -28,6 +28,7 @@ MDBDropdown, MDBDropdownToggle, MDBDropdownMenu, MDBDropdownItem,MDBIcon
   import { BrowserRouter as Router } from 'react-router-dom';
 import MsfLogo from './msfLogo.png'
 import Loader from 'react-loader-spinner'
+import { Link } from 'react-router-dom'
 
 const styles =(theme => ({
   button: {
@@ -142,7 +143,15 @@ constructor(props)
       activeItem:'home',
       isAdminloggedIn:false,
       userName:'',
-      loaderVisble:true
+      loaderVisble:true,
+      user_id:'',
+      queryNotify:false,
+      queryNotifyCount:false,
+      unReadQueriesId:[],
+
+      userNotify:false,
+      userNotifyCount:false,
+      unSeenuserId:[]
 }
 
 } 
@@ -186,6 +195,7 @@ constructor(props)
     firebase.auth().onAuthStateChanged(function(user){
       if (user) {
        
+        that.state.user_id=user.uid
         // User is signed in.   
         console.log("i am if cdm "+ user.email+" "+user.uid )
         console.log(user.displayName)
@@ -204,10 +214,167 @@ constructor(props)
         that.setState({isUserloggedIn:false,loaderVisble:false});
       }
     });
+
+const db= firebase.firestore()
+
+
+
+var unReadQueryHolder=[]
+var holdUnreadQueriesIdHolder=[]
+    db.collection('Queries').where("seen", "==", false)
+    .get()
+    .then(function(querySnapshot) {
+        querySnapshot.forEach(function(doc) {
+            // doc.data() is never undefined for query doc snapshots
+            console.log(doc.id, " => ", doc.data());
+
+            unReadQueryHolder.push(doc.data())
+
+            holdUnreadQueriesIdHolder.push(doc.id)
+        });
+
+
+        if(unReadQueryHolder.length>0){
+        that.setState({
+          unReadQueriesId:holdUnreadQueriesIdHolder,
+          queryNotify:true,
+          queryNotifyCount:unReadQueryHolder.length
+        })
+      }
+
+      
+
+     
+    })
+    .catch(function(error) {
+        console.log("Error getting documents: ", error);
+    });
+
+    //////////////
+var unSeenUserHodler=[]
+var holdSeenUserIdHolder=[]
+
+    db.collection('users').where("seen", "==", false)
+    .get()
+    .then(function(querySnapshot) {
+        querySnapshot.forEach(function(doc) {
+            // doc.data() is never undefined for query doc snapshots
+            console.log(doc.id, " => ", doc.data());
+              
+            unSeenUserHodler.push(doc.data())
+         
+            holdSeenUserIdHolder.push(doc.id)
+        });
+
+
+        if(unSeenUserHodler.length>0){
+        that.setState({
+          unSeenuserId:holdSeenUserIdHolder,
+          userNotify:true,
+          userNotifyCount:unSeenUserHodler.length
+        })
+      }
+
+      
+
+     
+    })
+    .catch(function(error) {
+        console.log("Error getting documents: ", error);
+    });
+
+
     
     }
   toggleCollapse = () => {
   this.setState({ isOpen: !this.state.isOpen });
+}
+
+endQueryNotification=()=>{
+
+  const db= firebase.firestore()
+  
+  const that = this;
+debugger
+console.log(that.state.unReadQueriesId)
+  if(that.state.unReadQueriesId.length===0){
+debugger
+    that.goto('/queries')
+
+  }else{
+
+  debugger
+
+that.state.unReadQueriesId.map((id)=>{
+
+
+  var washingtonRef = db.collection("Queries").doc(id)
+
+// Set the "capital" field of the city 'DC'
+return washingtonRef.update({
+    seen: true
+})
+.then(function() {
+    console.log("Document successfully updated!");
+    that.setState({
+      queryNotify:false
+    })
+    that.goto('/queries')
+})
+.catch(function(error) {
+    // The document probably doesn't exist.
+    console.error("Error updating document: ", error);
+    alert('error reaching queries refresh your page please ',error)
+    that.goto('/')
+});
+
+})
+
+  }
+}
+
+
+endUserNotification=()=>{
+
+  const db= firebase.firestore()
+  
+  const that = this;
+debugger
+console.log(that.state.unReadQueriesId)
+  if(that.state.unSeenuserId.length===0){
+debugger
+    that.goto('/myusers')
+
+  }else{
+
+  debugger
+
+that.state.unSeenuserId.map((id)=>{
+
+
+  var washingtonRef = db.collection("users").doc(id)
+
+// Set the "capital" field of the city 'DC'
+return washingtonRef.update({
+    seen: true
+})
+.then(function() {
+    console.log("Document successfully updated!");
+    that.setState({
+      queryNotify:false
+    })
+    that.goto('/myusers')
+})
+.catch(function(error) {
+    // The document probably doesn't exist.
+    console.error("Error updating document: ", error);
+    alert('error reaching queries refresh your page please ',error)
+    that.goto('/')
+});
+
+})
+
+  }
 }
 
   render(){
@@ -352,8 +519,10 @@ constructor(props)
       <MDBIcon icon="user" className="mr-1" />{this.state.userName}
     </MDBDropdownToggle>
       </h5>
+      
     <MDBDropdownMenu className="dropdown-default" right>
       <MDBDropdownItem onClick={()=>this.handleLogout()}>Log out</MDBDropdownItem>
+      <MDBDropdownItem onClick={()=>this.goto('/editprofile/'+ this.state.user_id)}>EditProfile</MDBDropdownItem>
     </MDBDropdownMenu>
   </MDBDropdown>
 </MDBNavItem>):
@@ -376,14 +545,15 @@ constructor(props)
   
       <MDBDropdownToggle nav caret>
       
-        <span className="mr-2">Actions</span>
+        <span className="mr-2"> {this.state.queryNotify || this.state.userNotify ?(<a><Icon loading name='bell' /> {this.state.queryNotifyCount + this.state.userNotifyCount}</a>):(null)} Actions</span>
         
       </MDBDropdownToggle>
     </h5>
       <MDBDropdownMenu>
         <MDBDropdownItem onClick={()=>this.goto('/postProduct')}>Post Product</MDBDropdownItem>
-        <MDBDropdownItem onClick={()=>this.goto('/myusers')}>My users</MDBDropdownItem>
-        <MDBDropdownItem onClick={()=>this.goto('/queries')}>Queries</MDBDropdownItem>
+        <MDBDropdownItem onClick={()=>this.endUserNotification()}>{this.state.userNotify?(<a><Icon loading name='bell' /> {this.state.userNotifyCount}</a>):(null)}My users</MDBDropdownItem>
+        <MDBDropdownItem onClick={()=>this.endQueryNotification()}>{this.state.queryNotify?(<a><Icon loading name='bell' /> {this.state.queryNotifyCount}</a>):(null)}Queries</MDBDropdownItem>
+        <MDBDropdownItem onClick={()=>this.goto('/noticeBoard')}>Post Notice</MDBDropdownItem>
         <MDBDropdownItem href="#!">Something else here</MDBDropdownItem>
         <MDBDropdownItem href="#!">Something else here</MDBDropdownItem>
       </MDBDropdownMenu>

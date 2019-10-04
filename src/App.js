@@ -16,6 +16,8 @@ import Clients from './Components/Clients/Clients'
 import Contact from './Components/Contact/Contact';
 import myUsers from './Components/AdminActions/myUsers';
 import Queries from './Components/AdminActions/Queries';
+import EditProfile from './Components/EditProfile/EditProfile';
+import NoticeBoard from './Components/AdminActions/NoticeBoard';
 
 
 function App() {
@@ -37,6 +39,8 @@ function App() {
       <Route exact path='/contactUs' component={Contact}/>
       <Route exact path='/myusers' component={myUsers}/>
       <Route exact path='/queries' component={Queries}/>
+      <Route exact path='/editprofile/:user_id' component={EditProfile}/>
+      <Route exact path='/noticeBoard' component={NoticeBoard}/>
      
       
 

@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import Header from '../Header/Header'
 import Footer from '../Footer/Footer'
-import { Table } from 'semantic-ui-react'
+// import { Table } from 'semantic-ui-react'
 import { Grid, Image } from 'semantic-ui-react'
 import firebase from '../Config/config.js'
 import { Button } from 'semantic-ui-react'
+import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table'
+import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css'
 
 class Queries extends Component {
 
@@ -28,7 +30,8 @@ class Queries extends Component {
         const db =firebase.firestore();
     
         var queryHolder=[]
-        db.collection("Queries").get().then(function(querySnapshot) {
+     
+        db.collection("Queries").orderBy('timestamp','desc').get().then(function(querySnapshot) {
           querySnapshot.forEach(function(doc) {
               // doc.data() is never undefined for query doc snapshots
               console.log(doc.id, " => ", doc.data());
@@ -44,7 +47,7 @@ class Queries extends Component {
     
       handleResponse=(email)=>{
 
-        window.location.href=`mailto:${email}`
+        window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=${email}` ,`_blank`)
       }
 
       handleDelete=(query_id,index)=>{
@@ -67,58 +70,55 @@ class Queries extends Component {
     render() {
         return (
             <React.Fragment>
+
             <Header/>
 
   
-
+<br/>
   
+  <div style={{ 
+    minHeight:600
+  }}
+      >
 
 <Grid unstackable={true}>
 <Grid.Row centered={true}>
  
-  <Grid.Column width={11} >
-  <Table
-  columns='4'
-  selectable={true}
-  size='small'
-  unstackable>
-    
-<Table.Header>
-  <Table.Row >
-    <Table.HeaderCell>Qurey ID</Table.HeaderCell>
-    <Table.HeaderCell>Name</Table.HeaderCell>
-    <Table.HeaderCell>E-mail address</Table.HeaderCell>
-    <Table.HeaderCell>Query</Table.HeaderCell>
-    <Table.HeaderCell>Time and Data</Table.HeaderCell>
-    <Table.HeaderCell>Respond Query</Table.HeaderCell>
-    <Table.HeaderCell>Close Query</Table.HeaderCell>
-  </Table.Row>
-</Table.Header>
+  <Grid.Column width={12} >
 
-<Table.Body>
-  { this.state.queries.map((query,index)=>{
-    return(
-  <Table.Row>
-  <Table.Cell>{query.query_id}</Table.Cell>
-  <Table.Cell>{query.name}</Table.Cell>
-  <Table.Cell>{query.email}</Table.Cell>
-  <Table.Cell><p>{query.message}</p></Table.Cell>
-   {/* <Table.Cell>{query.created ? new Date(query.created.seconds) : ''}</Table.Cell> */}
-   {/* <Table.Cell>{JSON.stringify(new Date(query.created))}</Table.Cell> */}
-   <Table.Cell>{new Date(query.created).getDate()} - {new Date(query.created).getMonth()+1}</Table.Cell>
-  <Table.Cell><button class="ui primary button" onClick={()=>this.handleResponse(query.email)}>Respond</button></Table.Cell>
-  <Table.Cell><button class="ui secondary button" onClick={()=>this.handleDelete(query.query_id,index)} >Close</button></Table.Cell>
- 
-  </Table.Row>
-    )
-  })
+
+
+<Table border='2'>
+      <Thead>
+        <Tr>
+          <Th>Qurey ID</Th>
+          <Th>Name</Th>
+          <Th>E-mail</Th>
+          <Th>Query</Th>
+          <Th>Time and Date</Th>
+          <Th>Respond Query</Th>
+          <Th>Close Query</Th>
+        </Tr>
+      </Thead>
+      <br/>
+      <Tbody>
+      { this.state.queries.map((query,index)=>{
+            return(
+        <Tr>
+          <Td>{query.query_id}</Td>
+          <Td>{query.name}</Td>
+          <Td>{query.email}</Td>
+          <Td><p>{query.message}</p></Td>
+          <Td>{new Date(query.created).getHours()}:{new Date(query.created).getMinutes()}<br/>{new Date(query.created).getDate()} - {new Date(query.created).getMonth()+1}- {new Date(query.created).getFullYear()}</Td>
+          <Td><button class="ui primary button" onClick={()=>this.handleResponse(query.email)}>Respond</button></Td>
+          <Td><button class="ui secondary button" onClick={()=>this.handleDelete(query.query_id,index)} >Close</button></Td>
+        </Tr>
+            )
+         })
 }
-  
 
-
-
-</Table.Body>
-</Table>
+      </Tbody>
+    </Table>
   </Grid.Column>
 
  
@@ -126,7 +126,7 @@ class Queries extends Component {
 </Grid.Row>
 </Grid>
 
-
+</div>
 
 <Footer/>
 
