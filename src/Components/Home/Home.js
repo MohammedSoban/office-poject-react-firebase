@@ -172,11 +172,19 @@ componentDidMount=()=>{
     </div>
 
     <Grid celled='internally' stackable={true} >
-    <Grid.Row  >
+    <Grid.Row>
       <Grid.Column width={3}>
-        <h1>Clients</h1>
-      
-        <ProductPictures/>
+      <Card centered={true}>
+    <Card.Content>
+      <Card.Header>Notice </Card.Header>
+    
+<br/>
+      <Card.Description>
+        welcome to our newly created website
+      </Card.Description>
+     
+    </Card.Content>
+  </Card>
       </Grid.Column>
       <Grid.Column width={10} textAlign='left' >
       <Container text textAlign='left'>
@@ -223,21 +231,13 @@ Fabrication
  
     
 
-      <Card centered={true}>
-    <Card.Content>
-      <Card.Header>Notice </Card.Header>
-    
-<br/>
-      <Card.Description>
-        welcome to our newly created website
-      </Card.Description>
-     
-    </Card.Content>
-  </Card>
+ 
 
 
  
-
+  <h1>Clients</h1>
+      
+      <ProductPictures/>
   
 
 

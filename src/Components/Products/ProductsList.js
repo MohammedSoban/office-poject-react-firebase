@@ -45,7 +45,7 @@ const styles = theme => ({
   img: {
    
     display: 'block',
-     height:150,
+     height:170,
     overflow: 'hidden',
     width: '100%',
 
@@ -53,7 +53,7 @@ const styles = theme => ({
   Card: {
 
   
-   height:430,
+   height:400,
    width: '100%',
     
 
@@ -82,7 +82,7 @@ class SpacingGrid extends Component {
       products:[],
       loaderVisible:true,
       productIndex:'',
-      isAdminloggedIn:true,
+      isAdminloggedIn:false,
       loaderVisibleOnDelete:false,
       search:''
     
@@ -308,23 +308,18 @@ desertRef.delete().then(function() {
        
 
        {/* <img className={classes.img} src={product.imageUrls} alt={product.label} /> */}
-       <Image className={classes.img} size={"small"} src={product.imageUrls} wrapped ui={false} />
+       <Image className={classes.img} size={"small"} src={product.imageUrls[0]} wrapped ui={false} />
     <Card.Content>
       
    
       <Card.Header>{product.productName}</Card.Header>
-      <Card.Meta>{product.productPrice} RS</Card.Meta>
       <Card.Description
       >
         {product.productDetails}
       </Card.Description>
       
     </Card.Content>
-    <Card.Content extra>
-      <a>
-      <Rating defaultRating={3.5} maxRating={5} disabled />
-      </a>
-    </Card.Content>
+
   </Card>
  
   </Card.Group>

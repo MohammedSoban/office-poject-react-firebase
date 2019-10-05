@@ -37,8 +37,8 @@ function App() {
       <Route exact path='/services' component={Services}/>
       <Route exact path='/clients' component={Clients}/>
       <Route exact path='/contactUs' component={Contact}/>
-      <Route exact path='/myusers' component={myUsers}/>
-      <Route exact path='/queries' component={Queries}/>
+      <Route exact path='/myusers/:notificationCount' component={myUsers}/>
+      <Route exact path='/queries/:notificationCount' component={Queries}/>
       <Route exact path='/editprofile/:user_id' component={EditProfile}/>
       <Route exact path='/noticeBoard' component={NoticeBoard}/>
      

@@ -221,67 +221,113 @@ const db= firebase.firestore()
 
 var unReadQueryHolder=[]
 var holdUnreadQueriesIdHolder=[]
-    db.collection('Queries').where("seen", "==", false)
-    .get()
-    .then(function(querySnapshot) {
+
+db.collection('Queries').where("seen", "==", false)
+    .onSnapshot(function(querySnapshot) {
+        var cities = [];
         querySnapshot.forEach(function(doc) {
-            // doc.data() is never undefined for query doc snapshots
-            console.log(doc.id, " => ", doc.data());
+          console.log(doc.id, " => ", doc.data());
 
-            unReadQueryHolder.push(doc.data())
+          unReadQueryHolder.push(doc.data())
 
-            holdUnreadQueriesIdHolder.push(doc.id)
-        });
-
-
-        if(unReadQueryHolder.length>0){
-        that.setState({
-          unReadQueriesId:holdUnreadQueriesIdHolder,
-          queryNotify:true,
-          queryNotifyCount:unReadQueryHolder.length
+          holdUnreadQueriesIdHolder.push(doc.id)
         })
-      }
+   
+        if(unReadQueryHolder.length>0){
+          that.setState({
+            unReadQueriesId:holdUnreadQueriesIdHolder,
+            queryNotify:true,
+            queryNotifyCount:unReadQueryHolder.length
+          })
+        }
+    
+    })
+    
+  
+   
+
+    // db.collection('Queries').where("seen", "==", false)
+    // .get()
+    // .then(function(querySnapshot) {
+    //     querySnapshot.forEach(function(doc) {
+    //         // doc.data() is never undefined for query doc snapshots
+    //         console.log(doc.id, " => ", doc.data());
+
+    //         unReadQueryHolder.push(doc.data())
+
+    //         holdUnreadQueriesIdHolder.push(doc.id)
+    //     });
+
+
+    //     if(unReadQueryHolder.length>0){
+    //     that.setState({
+    //       unReadQueriesId:holdUnreadQueriesIdHolder,
+    //       queryNotify:true,
+    //       queryNotifyCount:unReadQueryHolder.length
+    //     })
+    //   }
 
       
 
      
-    })
-    .catch(function(error) {
-        console.log("Error getting documents: ", error);
-    });
+    // })
+    // .catch(function(error) {
+    //     console.log("Error getting documents: ", error);
+    // });
 
     //////////////
+
+
 var unSeenUserHodler=[]
 var holdSeenUserIdHolder=[]
 
-    db.collection('users').where("seen", "==", false)
-    .get()
-    .then(function(querySnapshot) {
+db.collection('users').where("seen", "==", false)
+    .onSnapshot(function(querySnapshot) {
+       
         querySnapshot.forEach(function(doc) {
-            // doc.data() is never undefined for query doc snapshots
-            console.log(doc.id, " => ", doc.data());
+          console.log(doc.id, " => ", doc.data());
               
-            unSeenUserHodler.push(doc.data())
-         
-            holdSeenUserIdHolder.push(doc.id)
+          unSeenUserHodler.push(doc.data())
+       
+          holdSeenUserIdHolder.push(doc.id)
         });
-
-
         if(unSeenUserHodler.length>0){
-        that.setState({
-          unSeenuserId:holdSeenUserIdHolder,
-          userNotify:true,
-          userNotifyCount:unSeenUserHodler.length
-        })
-      }
+          that.setState({
+            unSeenuserId:holdSeenUserIdHolder,
+            userNotify:true,
+            userNotifyCount:unSeenUserHodler.length
+          })
+        }
+    });
+
+    // db.collection('users').where("seen", "==", false)
+    // .get()
+    // .then(function(querySnapshot) {
+    //     querySnapshot.forEach(function(doc) {
+    //         // doc.data() is never undefined for query doc snapshots
+    //         console.log(doc.id, " => ", doc.data());
+              
+    //         unSeenUserHodler.push(doc.data())
+         
+    //         holdSeenUserIdHolder.push(doc.id)
+    //     });
+
+
+    //     if(unSeenUserHodler.length>0){
+    //     that.setState({
+    //       unSeenuserId:holdSeenUserIdHolder,
+    //       userNotify:true,
+    //       userNotifyCount:unSeenUserHodler.length
+    //     })
+    //   }
 
       
 
      
-    })
-    .catch(function(error) {
-        console.log("Error getting documents: ", error);
-    });
+    // })
+    // .catch(function(error) {
+    //     console.log("Error getting documents: ", error);
+    // });
 
 
     
@@ -299,7 +345,7 @@ debugger
 console.log(that.state.unReadQueriesId)
   if(that.state.unReadQueriesId.length===0){
 debugger
-    that.goto('/queries')
+    that.goto('/queries/'+that.state.queryNotifyCount)
 
   }else{
 
@@ -319,7 +365,7 @@ return washingtonRef.update({
     that.setState({
       queryNotify:false
     })
-    that.goto('/queries')
+    that.goto('/queries/'+that.state.queryNotifyCount)
 })
 .catch(function(error) {
     // The document probably doesn't exist.
@@ -343,7 +389,7 @@ debugger
 console.log(that.state.unReadQueriesId)
   if(that.state.unSeenuserId.length===0){
 debugger
-    that.goto('/myusers')
+    that.goto('/myusers/'+that.state.userNotifyCount)
 
   }else{
 
@@ -363,7 +409,8 @@ return washingtonRef.update({
     that.setState({
       queryNotify:false
     })
-    that.goto('/myusers')
+    that.goto('/myusers/'+that.state.userNotifyCount)
+  
 })
 .catch(function(error) {
     // The document probably doesn't exist.

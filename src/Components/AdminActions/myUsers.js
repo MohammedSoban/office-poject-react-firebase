@@ -18,7 +18,9 @@ class myUsers extends Component {
 
     this.state = {
 
-   users:[]
+      notificationCount:'',
+   users:[],
+   newData:false,
     
      
     }
@@ -26,9 +28,32 @@ class myUsers extends Component {
 }
 
   componentDidMount=()=>{
-    var that=this
-    const db =firebase.firestore();
 
+
+
+
+    var that=this
+
+    let notificationCount =that.props.match.params.notificationCount
+
+
+    that.setState({
+      notificationCount:notificationCount
+    })
+
+    if(notificationCount==='false'){
+      notificationCount=0
+    }
+   
+         if(notificationCount!=0){
+           debugger
+           that.setState({
+             newData:true
+           })
+         }
+
+    const db =firebase.firestore();
+ 
     var usersHolder=[]
     db.collection("users").orderBy('timestamp','desc').get().then(function(querySnapshot) {
       querySnapshot.forEach(function(doc) {
@@ -88,6 +113,45 @@ class myUsers extends Component {
 
       <Grid.Column width={11} >
       
+      {this.state.newData?(<div style={{marginBottom:'5%'}}>
+        <h3>New Users</h3>
+        </div>):(<div style={{marginBottom:'5%'}}>
+        <h3>New Users</h3>
+        <p>No recent users</p>
+        </div>)}  
+{this.state.newData?(
+
+<Table border='2'>
+<Thead>
+  <Tr>
+               <Th>Name</Th>
+                <Th>E-mail</Th>
+                <Th>Company Name</Th>
+                <Th>Time and Date</Th>
+                <Th>Contact</Th>
+  </Tr>
+</Thead>
+<br/>
+<Tbody>
+{ this.state.users.slice(0,this.state.notificationCount).map((user,index)=>{
+      return(
+  <Tr>
+     <Td>{user.firstName+' '+user.lastName}</Td>
+                <Td>{user.email}</Td>
+                <Td>{user.companyName}</Td>
+                <Td>{new Date(user.created).getHours()}:{new Date(user.created).getMinutes()}<br/>{new Date(user.created).getDate()} - {new Date(user.created).getMonth()+1}- {new Date(user.created).getFullYear()}</Td>
+                 <Td><button class="ui primary button" onClick={()=>this.handleContact(user.email)}>contact</button></Td>
+  </Tr>
+      )
+   })
+}
+
+</Tbody>
+</Table>):(null)}
+<br/>
+<br/>
+<h3>Old Users</h3>
+<br/>
      
     
            <Table className="tdBefore" border='2' Selectable Rows>

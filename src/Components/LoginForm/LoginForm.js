@@ -165,7 +165,7 @@ function signIn(){
 
     var user = firebase.auth().currentUser;
 
-      if (user.emailVerified) {
+      if (user.emailVerified){
         console.log('after login '+Response.user.uid)
         console.log(user.emailVerified)
 

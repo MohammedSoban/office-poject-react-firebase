@@ -18,7 +18,9 @@ class Queries extends Component {
     
         this.state = {
     
-       queries:[]
+          notificationCount:'',
+       queries:[],
+       newData:false,
         
          
         }
@@ -26,7 +28,30 @@ class Queries extends Component {
     }
 
     componentDidMount=()=>{
-        var that=this
+
+      var that=this
+
+      
+      let notificationCount =that.props.match.params.notificationCount
+
+      console.log(notificationCount)
+
+      that.setState({
+        notificationCount:notificationCount
+      })
+ console.log(that.state.notificationCount)
+
+ if(notificationCount==='false'){
+   notificationCount=0
+ }
+
+      if(notificationCount!=0){
+        debugger
+        that.setState({
+          newData:true
+        })
+      }
+
         const db =firebase.firestore();
     
         var queryHolder=[]
@@ -48,6 +73,7 @@ class Queries extends Component {
       handleResponse=(email)=>{
 
         window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=${email}` ,`_blank`)
+        
       }
 
       handleDelete=(query_id,index)=>{
@@ -81,13 +107,57 @@ class Queries extends Component {
   }}
       >
 
+  
+
+
 <Grid unstackable={true}>
 <Grid.Row centered={true}>
  
   <Grid.Column width={12} >
 
+  {this.state.newData?(<div style={{marginBottom:'5%'}}>
+        <h3>New Queries</h3>
+        </div>):(<div style={{marginBottom:'5%'}}>
+        <h3>New Queries</h3>
+        <p>No recent queries</p>
+        </div>)}  
+{this.state.newData?(
 
+<Table border='2'>
+<Thead>
+  <Tr>
+    <Th>Qurey ID</Th>
+    <Th>Name</Th>
+    <Th>E-mail</Th>
+    <Th>Query</Th>
+    <Th>Time and Date</Th>
+    <Th>Respond Query</Th>
+    <Th>Close Query</Th>
+  </Tr>
+</Thead>
+<br/>
+<Tbody>
+{ this.state.queries.slice(0,this.state.notificationCount).map((query,index)=>{
+      return(
+  <Tr>
+    <Td>{query.query_id}</Td>
+    <Td>{query.name}</Td>
+    <Td>{query.email}</Td>
+    <Td><p>{query.message}</p></Td>
+    <Td>{new Date(query.created).getHours()}:{new Date(query.created).getMinutes()}<br/>{new Date(query.created).getDate()} - {new Date(query.created).getMonth()+1}- {new Date(query.created).getFullYear()}</Td>
+    <Td><button class="ui primary button" onClick={()=>this.handleResponse(query.email)}>Respond</button></Td>
+    <Td><button class="ui secondary button" onClick={()=>this.handleDelete(query.query_id,index)} >Close</button></Td>
+  </Tr>
+      )
+   })
+}
 
+</Tbody>
+</Table>):(null)}
+<br/>
+<br/>
+<h3>Old Queries</h3>
+<br/>
 <Table border='2'>
       <Thead>
         <Tr>
