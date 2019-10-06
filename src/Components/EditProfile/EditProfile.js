@@ -165,18 +165,20 @@ docRef.get().then(function(doc) {
       
       
       };
+
     handelSigupEdit=()=>{
 
-        
+        debugger
 var that=this
 
 let {firstName,lastName,companyName}=that.state
+
 that.setState({
     loaderVisible:true
 })
 const db =firebase.firestore();
         var washingtonRef = db.collection("users").doc(that.state.id);
-
+debugger
 // Set the "capital" field of the city 'DC'
 return washingtonRef.update({
     firstName:firstName,
@@ -188,13 +190,15 @@ return washingtonRef.update({
     console.log("Document successfully updated!");
 
     var user = firebase.auth().currentUser;
-    let userName=this.state.firstName+' '+this.state.lastName
+    let userName=that.state.firstName+' '+that.state.lastName
               user.updateProfile({
                 displayName: userName,
               }).then(function() {
-                // Update successful.
+                // Update successful.'
+                debugger
               }).catch(function(error) {
                 // An error happened.
+                debugger
                 that.setState({
                   loaderVisible:false
                 })
@@ -210,10 +214,12 @@ return washingtonRef.update({
 .catch(function(error) {
     // The document probably doesn't exist.
     console.error("Error updating document: ", error);
+    alert('Error updating profile',error)
+    debugger
     that.setState({
         loaderVisible:false
     })
-    alert('Error updating profile')
+   
 });
     }
 
@@ -229,7 +235,7 @@ return washingtonRef.update({
       <CardContent>
         
       <img src={User} width='80' height='80'/>
-       <h1>SIGN UP</h1>
+       <h1>Edit Profile</h1>
       <form className={classes.container} noValidate autoComplete="off" >
       <TextField
         id="outlined-name"
@@ -269,7 +275,7 @@ return washingtonRef.update({
       onClick={()=>this.handelSigupEdit()}
       
       >
-       SIGN UP!
+       Update!
       </Button>
 
       </form>

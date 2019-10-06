@@ -158,7 +158,7 @@ componentDidMount=()=>{
           
         {tutorialSteps.map((step, index) => (
             
-          <div key={step.label}>
+          <div key={index}>
               
             {Math.abs(0 - index) <= 4 ? (
               <img className={classes.img} src={step.imgPath} alt={step.label} />             
