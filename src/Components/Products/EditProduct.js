@@ -172,7 +172,8 @@ class EditProduct extends Component {
              productSpecification:obj.productSpecification,
              files:obj.fileNames,
              imageUrls:obj.imageUrls,
-             initialLoder:false
+             fileNames:obj.fileNames,
+             initialLoder:false,
            })
         var index
         var storageRef = firebase.storage().ref();
@@ -293,12 +294,14 @@ class EditProduct extends Component {
               productDetails,
               addSpec,
               products,
+              fileNames
                } = this.state
   
           var storageRef = firebase.storage().ref();
-          var urls = [];
-          var fileName=[]
+          var urls = []
           var finalUrls=[]
+          var fileName=[]
+          var finalFileNames=[]
           this.setState({
               loaderVisible:true,
               disableUplodaButton:true
@@ -374,15 +377,16 @@ class EditProduct extends Component {
 
                           if(this.state.files.length===urls.length){
                             finalUrls=this.state.imageUrls.concat(urls)
-
+                            finalFileNames=this.state.fileNames.concat(fileName)
                             this.setState({
                                 imageUrls: finalUrls,
-                                fileNames:fileName
+                                fileNames:finalFileNames
                               })
                           }
   
                           if(this.state.files.length===urls.length){
-                         
+                          debugger
+                          console.log(this.state.fileNames)
 
                           let { productName,
                             files,
