@@ -42,6 +42,8 @@ import Header from '../Header/Header'
 import Footer from '../Footer/Footer'
 import {withRouter} from 'react-router-dom'
 
+
+
 const styles = theme => ({
     fab: {
         margin: theme.spacing(1),
@@ -235,7 +237,7 @@ class RecipeReviewCard extends Component {
     }
 
     handelOnUpload() {
-
+debugger
         const db = firebase.firestore();
         var that=this
         let { productName,
@@ -251,19 +253,19 @@ class RecipeReviewCard extends Component {
           var storageRef = firebase.storage().ref();
           var urls = [];
           var fileName=[]
-  
+          var count=1
           this.setState({
               loaderVisible:true,
               disableUplodaButton:true
           })
-  
+  debugger
           this.state.files.map((file, index) => {
               storageRef.child(`images/${productName}/${file.name}`).put(file)
                   .then((response) => {
                      var progresss = (response.task.snapshot.bytesTransferred / response.task.snapshot.totalBytes) * 100;
                         
                  
-                     
+                     count++
                       console.log('Upload is ' + this.state.progress + '% done');
                       console.log(progresss)
                      
@@ -288,19 +290,19 @@ class RecipeReviewCard extends Component {
                           console.log('sum=',sum)
   
                           console.log('second iteration')
-                          
-  
-                          if(this.state.files.length===sum){
+                          debugger
+                           
+                          if(this.state.files.length===urls.length){
                          
                             this.setState({
                                 imageUrls: urls,
                                 fileNames:fileName
                               })
                             }
-
-                          if(this.state.files.length===sum){
+                        console.log(count,'contttttttt')
+                          if(this.state.files.length===urls.length){
                          
-                        
+                        debugger
 
                           let { productName,
                             files,
@@ -335,7 +337,8 @@ class RecipeReviewCard extends Component {
                                    productDetails:productDetails,
                                    addSpec,
                                    fileNames:fileNames,
-                        
+                                   timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                                   created: new Date().getTime()
 
                                }).then(function() {
                                 
@@ -358,6 +361,8 @@ class RecipeReviewCard extends Component {
                               })
                            })
 
+                          }else{
+                              alert('unable to upload your product please try again')
                           }
                       }).catch((error)=>{
                          alert(error)
@@ -368,13 +373,13 @@ class RecipeReviewCard extends Component {
                           disableUplodaButton:false,
                           })
                       })
-                      
+                    
                   })
   
-                  
+                
           })
           
-         
+        
         //  this.setState({ imageUrls: urls,})
           
             
@@ -486,7 +491,7 @@ class RecipeReviewCard extends Component {
                     <form className={classes.container} noValidate autoComplete="off">
                         <TextField
                             id="outlined-name"
-                            label="Prodcut Name"
+                            label="Product Name"
                             name='productName'
                             className={classes.textField}
                             value={this.state.productName}
@@ -509,7 +514,7 @@ class RecipeReviewCard extends Component {
 
                         <TextField
                             id="outlined-multiline-static"
-                            label="Prodcut Details"
+                            label="Product Details"
                             multiline
                             rows="4"
                             rowsMax='4'

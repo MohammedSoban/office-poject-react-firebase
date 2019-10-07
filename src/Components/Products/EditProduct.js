@@ -372,7 +372,7 @@ class EditProduct extends Component {
                           console.log('second iteration')
                           
 
-                          if(this.state.files.length===sum){
+                          if(this.state.files.length===urls.length){
                             finalUrls=this.state.imageUrls.concat(urls)
 
                             this.setState({
@@ -381,7 +381,7 @@ class EditProduct extends Component {
                               })
                           }
   
-                          if(this.state.files.length===sum){
+                          if(this.state.files.length===urls.length){
                          
 
                           let { productName,
@@ -417,7 +417,8 @@ class EditProduct extends Component {
                                    productDetails:productDetails,
                                    addSpec,
                                    fileNames:fileNames,
-                        
+                                   timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                                   created: new Date().getTime()
 
                                }).then(function() {
                                 
@@ -512,7 +513,7 @@ class EditProduct extends Component {
         <form className={classes.container} noValidate autoComplete="off">
             <TextField
                 id="outlined-name"
-                label="Prodcut Name"
+                label="Product Name"
                 name='productName'
                 className={classes.textField}
                 value={this.state.productName}
@@ -535,7 +536,7 @@ class EditProduct extends Component {
 
             <TextField
                 id="outlined-multiline-static"
-                label="Prodcut Details"
+                label="Product Details"
                 multiline
                 rows="4"
                 rowsMax='4'
