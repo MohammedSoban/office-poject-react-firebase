@@ -33,6 +33,8 @@ import {
   createMuiTheme
 } from "@material-ui/core/styles";
 
+import Footer from '../Footer/Footer';
+
 
 const styles = theme => ({
     card: {
@@ -103,15 +105,19 @@ class EditProfile extends Component {
         password:'',
         c_password:'',
         companyName:'',
+        initialLoader:true,
         loaderVisible:false,
         buttonDisable:true,
-        id:''
+        id:'',
+    
          
         }
     
     }
 
     componentDidMount=()=>{
+
+      
         let id =this.props.match.params.user_id
 var that=this
 that.setState({
@@ -131,9 +137,16 @@ docRef.get().then(function(doc) {
         firstName: obj.firstName,
         lastName:obj.lastName,
         companyName:obj.companyName,
+        email:obj.email,
+        initialLoader:false
      
       })
+
+     
     } else {
+      that.setState({
+        initialLoader:false
+      })
         // doc.data() will be undefined in this case
         console.log("No such document!");
         alert('no data found')
@@ -141,6 +154,9 @@ docRef.get().then(function(doc) {
 
 
 }).catch(function(error) {
+  that.setState({
+    initialLoader:false
+  })
     console.log("Error getting document:", error);
     alert('refresh the page please ',error)
 });
@@ -166,16 +182,19 @@ docRef.get().then(function(doc) {
       
       };
 
+
+
     handelSigupEdit=()=>{
 
+      this.setState({
+        loaderVisible:true
+    })
         debugger
 var that=this
 
 let {firstName,lastName,companyName}=that.state
 
-that.setState({
-    loaderVisible:true
-})
+
 const db =firebase.firestore();
         var washingtonRef = db.collection("users").doc(that.state.id);
 debugger
@@ -231,11 +250,27 @@ return washingtonRef.update({
             <div>
                 <React.Fragment>
       <Header/>
-    <Card className={classes.card}>
+
+
+
+{this.state.initialLoader?(<Loader
+  type="ThreeDots"
+  color="green"
+  height={100}
+  width={100}
+  visible={this.state.initialLoader}
+//3 secs 
+>Fetching Data</Loader>):(  <Card className={classes.card}>
       <CardContent>
         
       <img src={User} width='80' height='80'/>
        <h1>Edit Profile</h1>
+
+      <Typography variant='h6'>
+       'Email Adress cannot be edited' {this.state.email}
+        
+      </Typography>
+
       <form className={classes.container} noValidate autoComplete="off" >
       <TextField
         id="outlined-name"
@@ -289,7 +324,10 @@ return washingtonRef.update({
                                     //3 secs 
                                     ></Loader>
       </CardContent>
-    </Card>
+    </Card>)}
+      
+
+<Footer/>
     </React.Fragment>
             </div>
         );

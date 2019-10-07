@@ -2,6 +2,8 @@ import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import firebase from '../Config/config.js'
+import Loader from 'react-loader-spinner'
+
 
 class PrivateRoute extends React.Component {
     state = {
@@ -32,7 +34,14 @@ class PrivateRoute extends React.Component {
         const { loading, isAuthenticated } = this.state
         return (
             loading ?
-                "...loading" :
+            <Loader
+            type="ThreeDots"
+            color="green"
+            height={100}
+            width={100}
+            visible={this.state.loading}
+            //3 secs 
+            ></Loader>:
                 <Route
                     {...rest}
                     render={props =>

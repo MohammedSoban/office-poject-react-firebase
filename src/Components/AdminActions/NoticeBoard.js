@@ -43,7 +43,7 @@ uploadNotice=()=>{
   const db=firebase.firestore()
 var that=this
 
-  db.collection("notice").doc().set({
+  db.collection("notice").doc('notice').set({
     noticeTitle: that.state.noticeTitle ,
     noticeDescription: that.state.noticeDescription,
     timestamp: firebase.firestore.FieldValue.serverTimestamp(),

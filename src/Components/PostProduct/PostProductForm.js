@@ -40,7 +40,7 @@ import { Line, Circle } from 'rc-progress';
 import { thisTypeAnnotation } from '@babel/types';
 import Header from '../Header/Header'
 import Footer from '../Footer/Footer'
-
+import {withRouter} from 'react-router-dom'
 
 const styles = theme => ({
     fab: {
@@ -213,6 +213,11 @@ class RecipeReviewCard extends Component {
 
     }
 
+    goto=(path)=>{
+
+        this.props.history.push(path)
+     
+      }
     handelOnDelete(event, index) {
 
         this.state.productSpecification.splice(index, 1)
@@ -232,7 +237,7 @@ class RecipeReviewCard extends Component {
     handelOnUpload() {
 
         const db = firebase.firestore();
-        
+        var that=this
         let { productName,
             //  files,
               productSpecification,
@@ -291,6 +296,11 @@ class RecipeReviewCard extends Component {
                                 imageUrls: urls,
                                 fileNames:fileName
                               })
+                            }
+
+                          if(this.state.files.length===sum){
+                         
+                        
 
                           let { productName,
                             files,
@@ -336,14 +346,27 @@ class RecipeReviewCard extends Component {
                                   disableUplodaButton:false,
                                   })
                                    alert('Product successfuly uploaded')
+                                   that.goto('/products')
                                })
                                .catch((error)=>{
                                alert(error)
+                                 
+                               that.setState({
+                                    
+                                loaderVisible:false,
+                              disableUplodaButton:false,
+                              })
                            })
 
                           }
                       }).catch((error)=>{
                          alert(error)
+                           
+                         that.setState({
+                                    
+                            loaderVisible:false,
+                          disableUplodaButton:false,
+                          })
                       })
                       
                   })
@@ -621,4 +644,4 @@ class RecipeReviewCard extends Component {
     };
 }
 
-export default withStyles(styles)(RecipeReviewCard);
+export default withRouter(withStyles(styles)(RecipeReviewCard));

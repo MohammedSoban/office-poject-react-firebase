@@ -66,8 +66,6 @@ class Clients extends Component {
            indicators: false,
             scale: 0.4,
             arrows: false
-            
-
           }
         return (
 

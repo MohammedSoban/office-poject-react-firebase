@@ -1,44 +1,34 @@
-import React,{Component} from 'react';
-import ImageGallery from 'react-image-gallery';
-import ReactDOM from 'react-dom'
-import "react-image-gallery/styles/css/image-gallery.css";
-
-
-
-class MyComponent extends React.Component {
+import React from 'react';
+import ImageUploader from 'react-images-upload';
  
-  render() {
+class App extends React.Component {
  
-    const images = [
-      {
-        original: 'https://picsum.photos/id/1018/1000/600/',
-        thumbnail: 'https://picsum.photos/id/1018/250/150/',
-      },
-      {
-        original: 'https://picsum.photos/id/1015/1000/600/',
-        thumbnail: 'https://picsum.photos/id/1015/250/150/',
-      },
-      {
-        original: 'https://picsum.photos/id/1019/1000/600/',
-        thumbnail: 'https://picsum.photos/id/1019/250/150/',
-      },
-    ];
+    constructor(props) {
+        super(props);
+         this.state = { pictures: [] };
+         this.onDrop = this.onDrop.bind(this);
+    }
  
-    
-    return (
-
-      
-        
-      <ImageGallery
-             items={images}
-      showFullscreenButton={true} 
-      showThumbnails={true}/>
-  
-
-);
-    
-  }
+    onDrop(picture) {
+        this.setState({
+            pictures: this.state.pictures.concat(picture),
+        });
+     
+    }
  
+    render() {
+        return (
+            <ImageUploader
+                withIcon={true}
+                buttonText='Choose images'
+                onChange={this.onDrop}
+                imgExtension={['.jpg', '.gif', '.png', '.gif']}
+                maxFileSize={5242880}
+                withPreview={true}
+                buttonClassName='post'
+                withIcon={true}
+            />
+        );
+    }
 }
-
-export default MyComponent
+export default App

@@ -20,6 +20,9 @@ import EditProfile from './Components/EditProfile/EditProfile';
 import NoticeBoard from './Components/AdminActions/NoticeBoard';
 import PrivateRoute from "./Components/PrivateRoute"
 
+
+
+
 function App() {
   return (
     <BrowserRouter>
@@ -27,22 +30,22 @@ function App() {
 
         <Route exact path='/' component={Home} />
         <Route exact path='/login' component={LoginForm} />
-        {/* <Route exact path='/products' component={ProductsList} /> */}
+        <Route exact path='/products' component={ProductsList} />
         <Route exact path='/signup' component={SignupForm} />
-        <Route exact path='/postProduct' component={PostProductForm} />
         <Route exact path='/imageUpload' component={ImageUpload} />
         <Route exact path='/productView/:product_id' component={ProductView} />
-        <Route exact path='/editProduct/:product_id' component={EditProduct} />
         <Route exact path='/services' component={Services} />
         <Route exact path='/clients' component={Clients} />
         <Route exact path='/contactUs' component={Contact} />
-        <Route exact path='/myusers/:notificationCount' component={myUsers} />
-        <Route exact path='/queries/:notificationCount' component={Queries} />
-        <Route exact path='/editprofile/:user_id' component={EditProfile} />
-        <Route exact path='/noticeBoard' component={NoticeBoard} />
 
         <Switch>
-          <PrivateRoute exact path="/products" component={ProductsList}/>
+        <PrivateRoute exact path='/postProduct' component={PostProductForm} />
+        <PrivateRoute exact path='/editProduct/:product_id' component={EditProduct} />
+        <PrivateRoute exact path='/myusers/:notificationCount' component={myUsers} />
+        <PrivateRoute exact path='/queries/:notificationCount' component={Queries} />
+        <PrivateRoute exact path='/editprofile/:user_id' component={EditProfile} />
+        <PrivateRoute exact path='/noticeBoard' component={NoticeBoard} />
+          {/* <PrivateRoute exact path="/products" component={ProductsList}/> */}
         </Switch>
 
       </div>

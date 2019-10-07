@@ -40,7 +40,7 @@ import { Line, Circle } from 'rc-progress';
 import { thisTypeAnnotation, throwStatement } from '@babel/types';
 import Header from '../Header/Header'
 import Footer from '../Footer/Footer'
-
+import {withRouter} from 'react-router-dom'
 
 
 
@@ -130,8 +130,10 @@ class EditProduct extends Component {
             open: false,
             progress:0,
             loaderVisible:false,
+            initialLoder:true,
             disableUplodaButton:false,
             fileNames:[],
+            fileChnages:false,
             
           //  product:{}
                 
@@ -169,7 +171,8 @@ class EditProduct extends Component {
              productDetails:obj.productDetails,
              productSpecification:obj.productSpecification,
              files:obj.fileNames,
-             imageUrls:obj.imageUrls
+             imageUrls:obj.imageUrls,
+             initialLoder:false
            })
         var index
         var storageRef = firebase.storage().ref();
@@ -178,6 +181,9 @@ class EditProduct extends Component {
         }
 
     }).catch(function(error) {
+        that.setState({
+            initialLoder:false
+          })
         console.log("Error getting document:", error);
         alert(error)
     })
@@ -198,8 +204,9 @@ class EditProduct extends Component {
         //Saving files to state for further use and closing Modal.
         this.setState({
             files: files,
+            fileChnages:true,
             open: false
-
+            
         });
 
         
@@ -275,10 +282,9 @@ class EditProduct extends Component {
   
 
     handelOnUpload() {
+      
         const db = firebase.firestore();
-
-
-        
+        var that=this
         let { productName,
             //  files,
               productSpecification,
@@ -292,12 +298,46 @@ class EditProduct extends Component {
           var storageRef = firebase.storage().ref();
           var urls = [];
           var fileName=[]
-          var holdAllImages=[]
+          var finalUrls=[]
           this.setState({
               loaderVisible:true,
               disableUplodaButton:true
           })
   
+         if(this.state.fileChnages===false){
+             debugger
+            db.collection("Products").doc(this.state.id).set({
+               
+                productName:productName,
+                productSpecification:productSpecification,
+                imageUrls:imageUrls,
+                productPrice:productPrice,
+                productDetails:productDetails,
+                addSpec,
+             
+     
+
+            }).then(function() {
+             
+            
+             that.setState({
+                 
+                 loaderVisible:false,
+               disableUplodaButton:false,
+               })
+                alert('Product successfuly uploaded')
+                that.goto('/products')
+            })
+            .catch((error)=>{
+            alert(error)
+            that.setState({
+                 
+                loaderVisible:false,
+              disableUplodaButton:false,
+              })
+        })
+         }else{
+             debugger
           this.state.files.map((file, index) => {
               storageRef.child(`images/${productName}/${file.name}`).put(file)
                   .then((response) => {
@@ -313,24 +353,12 @@ class EditProduct extends Component {
                         console.log(fileName,'files name')
 
                       response.task.snapshot.ref.getDownloadURL().then((downloadURL) => {
-                       this.state.imageUrls.push(downloadURL)
-                      
-                     
-                    })
-
-                   
-                         // console.log(urls,'final urls')
+                          urls.push(downloadURL)
+                          
+                       
+                          console.log(urls)
                       }).then(()=>{
-                        //urls=urls.concat(this.state.imageUrls)
-                        console.log(this.state.imageUrls)
-                      //  var realUrls=this.state.imageUrls.concat(urls)
-                      //  urls=urls+this.state.afterDeleteImageHolder
-                     
-                    
-                    //   this.setState({
-                    //     imageUrls:this.state.imageUrls,
-                    //     fileNames:fileName
-                    //   })
+                        
                        
 
                           console.log(this.state.fileNames,'files name state')
@@ -342,23 +370,20 @@ class EditProduct extends Component {
                           console.log('sum=',sum)
   
                           console.log('second iteration')
-                        
-                          console.log(this.state.imageUrls,'all images ouside if')
-
-                if(this.state.files.length===sum){
-                    //holdAllImages=urls.concat(this.state.imageUrls)
-                    this.setState({
-                        imageUrls:this.state.imageUrls,
-                        fileNames:fileName
-                      })
-                              console.log(this.state.imageUrls,'all images inside if')
-                          }
-
-                         
-                     //     console.log(this.state.imageUrls,'all images')
-                          if(this.state.files.length===sum){
                           
-                           
+
+                          if(this.state.files.length===sum){
+                            finalUrls=this.state.imageUrls.concat(urls)
+
+                            this.setState({
+                                imageUrls: finalUrls,
+                                fileNames:fileName
+                              })
+                          }
+  
+                          if(this.state.files.length===sum){
+                         
+
                           let { productName,
                             files,
                              productSpecification,
@@ -382,125 +407,55 @@ class EditProduct extends Component {
                            // products.push(obj)
                    
                            var that = this;
-                           console.log(imageUrls,'all images inside second if')
-                           var washingtonRef = db.collection("Products").doc(this.state.id);
-                                return washingtonRef.update({
-                                    productName:productName,
-                                    productSpecification:productSpecification,
-                                    productPrice:productPrice,
-                                    productDetails:productDetails,
-                                    addSpec,
-                                    fileNames:fileNames,
-                                    imageUrls:imageUrls,
-                                })
-                                .then(function() {
-                                    console.log("Document successfully updated!");
-                                   // console.log(that.state.imageUrls,'all images inside second if')
+                   
+                               db.collection("Products").doc(this.state.id).set({
+               
+                                   productName:productName,
+                                   productSpecification:productSpecification,
+                                   imageUrls:imageUrls,
+                                   productPrice:productPrice,
+                                   productDetails:productDetails,
+                                   addSpec,
+                                   fileNames:fileNames,
+                        
+
+                               }).then(function() {
+                                
+                               
                                 that.setState({
                                     
                                     loaderVisible:false,
                                   disableUplodaButton:false,
+                                  fileChnages:false
                                   })
-                                })
-                                .catch(function(error) {
-                                    // The document probably doesn't exist.
-                                    console.error("Error updating document: ", error);
-                                    alert(error)
-                                });
-
-                               
+                                  
+                                   alert('Product successfuly uploaded')
+                                   that.goto('/products')
+                               })
+                               .catch((error)=>{
+                                that.setState({
+                 
+                                    loaderVisible:false,
+                                  disableUplodaButton:false,
+                                  })
+                               alert(error)
+                           })
 
                           }
                       }).catch((error)=>{
+                        that.setState({
+                 
+                            loaderVisible:false,
+                          disableUplodaButton:false,
+                          })
                          alert(error)
                       })
                       
                   })
   
                   
-          
-          
-         
-        //  this.setState({ imageUrls: urls,})
-          
-            
-        
-
-        // const file= files[0]
-
-
-        // var storageRef = firebase.storage().ref();
-
-
-        //  const image= storageRef.child(`images/${files[0].name}`)
-        // console.log(file)
-        //  image.put(file).then((snapshot)=>{
-        //    console.log(+image.getDownloadURL())
-        //  })
-        //var that = this;
-
-
-
-        
-
-        // for (var index = 0; index < files.length; index++) {
-
-        //     //  const file= files[index]
-
-        //     var uploadTask = storageRef.child(`images/${productName}/${files[index].name}`).put(files[index])
-        //     // Register three observers:
-        //     // 1. 'state_changed' observer, called any time the state changes
-        //     // 2. Error observer, called on failure
-        //     // 3. Completion observer, called on successful completion
-        //     uploadTask.on('state_changed', function (snapshot) {
-        //         debugger
-        //         // Observe state change events such as progress, pause, and resume
-        //         // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-        //         var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        //         console.log('Upload is ' + progress + '% done');
-        //         switch (snapshot.state) {
-        //             case firebase.storage.TaskState.PAUSED: // or 'paused'
-        //                 console.log('Upload is paused');
-        //                 break;
-        //             case firebase.storage.TaskState.RUNNING: // or 'running'
-        //                 console.log('Upload is running');
-        //                 break;
-        //         }
-        //     }, function (error) {
-        //         // Handle unsuccessful uploads
-        //         alert(error)
-        //     }, function () {
-
-        //         // Handle successful uploads on complete
-        //         // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-        //         uploadTask.snapshot.ref.getDownloadURL().then(function (downloadURL) {
-        //             debugger
-
-        //             //  console.log('File available at', downloadURL);
-
-        //             // var holdUrlTemp = [];
-
-        //             // holdUrlTemp[index] = downloadURL
-
-
-
-        //             that.setState({
-
-        //                 imageUrls: downloadURL
-        //             })
-        //             console.log(that.state.imageUrls)
-
-        //         });
-        //     });
-
-        // }
-
-     
-
-  
-    
-    
-
+          })
+        }
     }
 
 
@@ -522,6 +477,13 @@ class EditProduct extends Component {
  
         console.log(this.state.imageUrls)
     }
+
+    goto=(path)=>{
+
+        this.props.history.push(path)
+     
+      }
+
     render() {
         
         const { classes } = this.props
@@ -531,178 +493,187 @@ class EditProduct extends Component {
 
            <React.Fragment>
 <Header/>
-            <Card className={classes.card}>
+
+{this.state.initialLoder?(<Loader
+    type="ThreeDots"
+    color="green"
+    height={100}
+    width={100}
+    visible={this.state.initialLoader}
+  //3 secs 
+  >Fetching Data</Loader>):(<Card className={classes.card}>
                
-                <CardContent>
-                 
-                                   
-          
-
+    <CardContent>
      
-                    <form className={classes.container} noValidate autoComplete="off">
-                        <TextField
-                            id="outlined-name"
-                            label="Prodcut Name"
-                            name='productName'
-                            className={classes.textField}
-                            value={this.state.productName}
-                            onChange={(event) => this.handleOnChange(event)}
-                            margin="normal"
-                            variant="outlined"
-                        />
-
-                        <TextField
-                            id="outlined-number"
-                            label="Price"
-                            name='productPrice'
-                            value={this.state.productPrice}
-                            onChange={(event) => this.handleOnChange(event)}
-                            type="number"
-                            className={classes.textField}
-                            margin="normal"
-                            variant="outlined"
-                        />
-
-                        <TextField
-                            id="outlined-multiline-static"
-                            label="Prodcut Details"
-                            multiline
-                            rows="4"
-                            rowsMax='4'
-                           maxLength="3"
-                           type='text'
-                           inputProps={{ maxLength: 200 }}
-                            value={this.state.productDetails}
-                            name='productDetails'
-                            onChange={(event) => this.handleOnChange(event)}
-                            className={classes.textField}
-                            margin="normal"
-                            variant="outlined"
-                        />
-
-                     {this.state.imageUrls.map((image,index)=>{
-                         return(
-                    
-                            <CardContent>
-                             <img src={image} widht='70' height='70'/>
-                             <IconButton aria-label="delete" className={classes.margin}
-                             onClick={() => this.handelOnDeleteImage(index)}>
-                             <DeleteIcon fontSize="large" />
-                         </IconButton>
-                         </CardContent>
-                         );
-                     })
-                     }
-
-
-
                        
 
 
 
+        <form className={classes.container} noValidate autoComplete="off">
+            <TextField
+                id="outlined-name"
+                label="Prodcut Name"
+                name='productName'
+                className={classes.textField}
+                value={this.state.productName}
+                onChange={(event) => this.handleOnChange(event)}
+                margin="normal"
+                variant="outlined"
+            />
 
-                        {
+            <TextField
+                id="outlined-number"
+                label="Price"
+                name='productPrice'
+                value={this.state.productPrice}
+                onChange={(event) => this.handleOnChange(event)}
+                type="number"
+                className={classes.textField}
+                margin="normal"
+                variant="outlined"
+            />
 
+            <TextField
+                id="outlined-multiline-static"
+                label="Prodcut Details"
+                multiline
+                rows="4"
+                rowsMax='4'
+               maxLength="3"
+               type='text'
+               inputProps={{ maxLength: 200 }}
+                value={this.state.productDetails}
+                name='productDetails'
+                onChange={(event) => this.handleOnChange(event)}
+                className={classes.textField}
+                margin="normal"
+                variant="outlined"
+            />
 
-
-
-                            this.state.productSpecification.map((spec, index) => {
-
-                                return (
-
-
-
-
-                                   
-                                        <div className={classes.container} key={index}>
-                                            <TextField
-                                                id="outlined-name"
-                                                label="Specification Name"
-
-                                                className={classes.textField}
-                                                value={spec.specificationName}
-                                                onChange={(event) => this.handleOnChangeSpecs(event, index, 'specificationName')}
-                                                margin="normal"
-                                                variant="outlined"
-                                            />
-                                            <TextField
-                                                id="outlined-multiline-static"
-                                                label="Specification Details"
-                                                multiline
-                                                value={spec.specificationDetail}
-                                                rows="4"
-                                                
-                                                onChange={(event) => this.handleOnChangeSpecs(event, index, 'specificationDetail')}
-                                                className={classes.textField}
-                                                margin="normal"
-                                                variant="outlined"
-                                            />
-
-                                            <IconButton aria-label="delete" className={classes.margin}
-                                                onClick={(event) => this.handelOnDelete(event, index)}>
-                                                <DeleteIcon fontSize="large" />
-                                            </IconButton>
-                                        </div>
-                                   
-                                )
-                            })
-                        }
-
-
-                        <div>
-                            <Typography variant='h5' display='inline' align='center'>Add specifications </Typography>
-                            <ButtonBase onClick={(event) => this.handleOnAddSpecs(event)}>
-                                <Fab color="primary" aria-label="add" className={classes.fab}>
-                                    <AddIcon
-                                    />
-                                </Fab>
-                            </ButtonBase>
+         {this.state.imageUrls.map((image,index)=>{
+             return(
+        
+                <CardContent>
+                 <img src={image} widht='70' height='70'/>
+                 <IconButton aria-label="delete" className={classes.margin}
+                 onClick={() => this.handelOnDeleteImage(index)}>
+                 <DeleteIcon fontSize="large" />
+             </IconButton>
+             </CardContent>
+             );
+         })
+         }
 
 
-                            <Button variant="outlined" color="primary" className={classes.button} onClick={this.handleOpen.bind(this)}
-                             disabled={this.state.disableUplodaButton}>
-                                Add images
-                            </Button>
 
-                            
-                            
-                            <DropzoneDialog
-                                open={this.state.open}
-                                onSave={this.handleSave.bind(this)}
-                                acceptedFiles={['image/jpeg', 'image/png', 'image/bmp']}
-                                showPreviews={true}
-                                maxFileSize={5000000}
-                                filesLimit={20}
-                                onClose={this.handleClose.bind(this)}
-                               
-                                
-                            />
+           
 
-                                
+
+
+
+            {
+
+
+
+
+                this.state.productSpecification.map((spec, index) => {
+
+                    return (
+
+
+
+
+                       
+                            <div className={classes.container} key={index}>
+                                <TextField
+                                    id="outlined-name"
+                                    label="Specification Name"
+
+                                    className={classes.textField}
+                                    value={spec.specificationName}
+                                    onChange={(event) => this.handleOnChangeSpecs(event, index, 'specificationName')}
+                                    margin="normal"
+                                    variant="outlined"
+                                />
+                                <TextField
+                                    id="outlined-multiline-static"
+                                    label="Specification Details"
+                                    multiline
+                                    value={spec.specificationDetail}
+                                    rows="4"
                                     
-                            
+                                    onChange={(event) => this.handleOnChangeSpecs(event, index, 'specificationDetail')}
+                                    className={classes.textField}
+                                    margin="normal"
+                                    variant="outlined"
+                                />
 
-                            <Button variant="outlined" color="primary" className={classes.button}
-                                onClick={() => this.handelOnUpload()}
-                                disabled={this.state.disableUplodaButton}>
-                                UPLOAD!
-                            </Button>
+                                <IconButton aria-label="delete" className={classes.margin}
+                                    onClick={(event) => this.handelOnDelete(event, index)}>
+                                    <DeleteIcon fontSize="large" />
+                                </IconButton>
+                            </div>
+                       
+                    )
+                })
+            }
 
-                            <Loader 
-                                    type="ThreeDots"
-                                    color="green"
-                                    height={100}
-                                    width={100}
-                                    visible={this.state.loaderVisible}
-                                    //3 secs 
-                                    ></Loader>
-                        </div>
 
-                    </form>
+            <div>
+                <Typography variant='h5' display='inline' align='center'>Add specifications </Typography>
+                <ButtonBase onClick={(event) => this.handleOnAddSpecs(event)}>
+                    <Fab color="primary" aria-label="add" className={classes.fab}>
+                        <AddIcon
+                        />
+                    </Fab>
+                </ButtonBase>
+
+
+                <Button variant="outlined" color="primary" className={classes.button} onClick={this.handleOpen.bind(this)}
+                 disabled={this.state.disableUplodaButton}>
+                    Add images
+                </Button>
+
                 
-                </CardContent>
                 
-            </Card>
+                <DropzoneDialog
+                    open={this.state.open}
+                    onSave={this.handleSave.bind(this)}
+                    acceptedFiles={['image/jpeg', 'image/png', 'image/bmp']}
+                    showPreviews={true}
+                    maxFileSize={5000000}
+                    filesLimit={20}
+                    onClose={this.handleClose.bind(this)}
+                   
+                    
+                />
+
+                    
+                        
+                
+
+                <Button variant="outlined" color="primary" className={classes.button}
+                    onClick={() => this.handelOnUpload()}
+                    disabled={this.state.disableUplodaButton}>
+                    UPLOAD!
+                </Button>
+
+                <Loader 
+                        type="ThreeDots"
+                        color="green"
+                        height={100}
+                        width={100}
+                        visible={this.state.loaderVisible}
+                        //3 secs 
+                        ></Loader>
+            </div>
+
+        </form>
+    
+    </CardContent>
+    
+</Card>)}
+            
             <Footer/>
             </React.Fragment>
 
@@ -710,4 +681,4 @@ class EditProduct extends Component {
     };
 }
 
-export default withStyles(styles)(EditProduct);
+export default withRouter(withStyles(styles)(EditProduct));

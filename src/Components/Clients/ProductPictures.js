@@ -121,11 +121,11 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.background.default,
   },
   img: {
-    height: 100,
+    height: 120,
     display: 'center',
     margin:'auto',
 
-    maxWidth: 350,
+    maxWidth: 120,
     overflow: 'hidden',
     width: '100%',
   },

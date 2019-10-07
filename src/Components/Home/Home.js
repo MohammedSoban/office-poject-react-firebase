@@ -93,7 +93,7 @@ class SwipeableTextMobileStepper extends Component {
   this.state = {
     activeStep:0,
     //emailSent:false ,
-    open:false  ,
+    open:false,
     notices:[]
   }
 
@@ -108,17 +108,20 @@ componentDidMount=()=>{
   var that=this
 
   var noticeHolder=[]
-  db.collection("notice").orderBy('timestamp','desc').limit(5).get().then(function(querySnapshot) {
-    querySnapshot.forEach(function(doc) {
-        // doc.data() is never undefined for query doc snapshots
-        console.log(doc.id, " => ", doc.data());
-        noticeHolder.push({...doc.data(),query_id:doc.id})
-    });
+  db.collection("notice").doc("notice")
+  .onSnapshot(function(doc) {
+      console.log("Current data: ", doc.data());
+      noticeHolder.push(doc.data())
+ 
+      console.log(noticeHolder)
+      that.setState({
+        notices:noticeHolder
+    })
+  
+    console.log(that.state.notices)
+  });
 
-    that.setState({
-      notices:noticeHolder
-  })
-});
+ 
 
 }
 
@@ -174,17 +177,23 @@ componentDidMount=()=>{
     <Grid celled='internally' stackable={true} >
     <Grid.Row>
       <Grid.Column width={3}>
+      <h3>Notice Board</h3>
+        {this.state.notices.slice(0,1).map((notice)=>{
+          return(
       <Card centered={true}>
     <Card.Content>
-      <Card.Header>Notice </Card.Header>
+      <Card.Header>{notice.noticeTitle}</Card.Header>
     
 <br/>
       <Card.Description>
-        welcome to our newly created website
+      {notice.noticeDescription}
       </Card.Description>
      
     </Card.Content>
   </Card>
+          )
+  })
+}
       </Grid.Column>
       <Grid.Column width={10} textAlign='left' >
       <Container text textAlign='left'>

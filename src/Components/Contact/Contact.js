@@ -4,6 +4,8 @@ import Footer from '../Footer/Footer'
 import { Grid, Image } from 'semantic-ui-react'
 import { Card, Icon } from 'semantic-ui-react'
 import ovais from './ovais.jpg'
+import suleman from './suleman.jpg'
+import abdul from './abdul.jpg'
 import { MDBContainer, MDBRow, MDBCol, MDBIcon, MDBBtn, MDBInput } from "mdbreact";
 import firebase from '../Config/config.js'
 import Loader from 'react-loader-spinner'
@@ -258,7 +260,7 @@ class Contact extends Component {
                 <Card.Content>
                   <Card.Header>Ovais Suleman</Card.Header>
                   <Card.Meta>
-                    <span className='date'>Marketing Manager</span>
+                    <span className='date'>Sales And Project Mangement</span>
                   </Card.Meta>
           
                 </Card.Content>
@@ -302,7 +304,7 @@ class Contact extends Component {
 
                     <Icon name='graduation' />
                     <strong>
-                      MBA
+                      MBA Marketing
                     </strong>
                   </h5>
 
@@ -313,7 +315,7 @@ class Contact extends Component {
             <Grid.Column>
 
               <Card centered={true}>
-                <Image src={ovais} wrapped ui={false} />
+                <Image src={suleman} wrapped ui={false} />
                 <Card.Content>
                   <Card.Header>Muhammad Suleman</Card.Header>
                   <Card.Meta>
@@ -356,11 +358,11 @@ class Contact extends Component {
             <Grid.Column>
 
               <Card centered={true}>
-                <Image src={ovais} wrapped ui={false} />
+                <Image src={abdul} wrapped ui={false} />
                 <Card.Content>
                   <Card.Header>Abdul Rahman</Card.Header>
                   <Card.Meta>
-                    <span className='date'>Marketing Manager</span>
+                    <span className='date'>Sales And Project Mangement</span>
                   </Card.Meta>
         
                 </Card.Content>
@@ -400,7 +402,7 @@ class Contact extends Component {
             <h5>
                   <Icon name='graduation' />
                   <strong>
-                    MS
+                    MS Computer Science
         </strong>
 
             </h5>

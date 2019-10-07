@@ -72,7 +72,7 @@ class Queries extends Component {
     
       handleResponse=(email)=>{
 
-        window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=${email}` ,`_blank`)
+        window.open(`mailto:${email}` ,`_blank`)
         
       }
 

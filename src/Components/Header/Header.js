@@ -30,6 +30,7 @@ import MsfLogo from './msfLogo.png'
 import Loader from 'react-loader-spinner'
 import { Link } from 'react-router-dom'
 
+
 const styles =(theme => ({
   button: {
     margin: theme.spacing(1),
@@ -146,11 +147,11 @@ constructor(props)
       loaderVisble:true,
       user_id:'',
       queryNotify:false,
-      queryNotifyCount:false,
+      queryNotifyCount:0,
       unReadQueriesId:[],
 
       userNotify:false,
-      userNotifyCount:false,
+      userNotifyCount:0,
       unSeenuserId:[]
 }
 
@@ -189,7 +190,7 @@ constructor(props)
   componentDidMount=()=>{
   
    
-    
+     
     const that = this;
     //var user = firebase.auth().currentUser;
     firebase.auth().onAuthStateChanged(function(user){
@@ -224,27 +225,30 @@ var holdUnreadQueriesIdHolder=[]
 
 db.collection('Queries').where("seen", "==", false)
     .onSnapshot(function(querySnapshot) {
-        var cities = [];
+    
         querySnapshot.forEach(function(doc) {
           console.log(doc.id, " => ", doc.data());
-
+        
           unReadQueryHolder.push(doc.data())
 
           holdUnreadQueriesIdHolder.push(doc.id)
+       
+   
         })
    
         if(unReadQueryHolder.length>0){
           that.setState({
-            unReadQueriesId:holdUnreadQueriesIdHolder,
+           unReadQueriesId:holdUnreadQueriesIdHolder,
             queryNotify:true,
             queryNotifyCount:unReadQueryHolder.length
           })
+          console.log(that.state.queryNotifyCount,'conyyyyyyyyyyyyyy')
         }
     
     })
     
-  
-   
+ 
+
 
     // db.collection('Queries').where("seen", "==", false)
     // .get()
@@ -283,14 +287,15 @@ var holdSeenUserIdHolder=[]
 
 db.collection('users').where("seen", "==", false)
     .onSnapshot(function(querySnapshot) {
-       
+       debugger
         querySnapshot.forEach(function(doc) {
           console.log(doc.id, " => ", doc.data());
-              
+              debugger
           unSeenUserHodler.push(doc.data())
        
           holdSeenUserIdHolder.push(doc.id)
         });
+        
         if(unSeenUserHodler.length>0){
           that.setState({
             unSeenuserId:holdSeenUserIdHolder,
@@ -298,6 +303,9 @@ db.collection('users').where("seen", "==", false)
             userNotifyCount:unSeenUserHodler.length
           })
         }
+        
+        debugger
+        console.log(that.state.userNotifyCount,'counttt')
     });
 
     // db.collection('users').where("seen", "==", false)
@@ -341,15 +349,15 @@ endQueryNotification=()=>{
   const db= firebase.firestore()
   
   const that = this;
-debugger
+
 console.log(that.state.unReadQueriesId)
   if(that.state.unReadQueriesId.length===0){
-debugger
+
     that.goto('/queries/'+that.state.queryNotifyCount)
 
   }else{
 
-  debugger
+  
 
 that.state.unReadQueriesId.map((id)=>{
 
@@ -365,6 +373,7 @@ return washingtonRef.update({
     that.setState({
       queryNotify:false
     })
+    debugger
     that.goto('/queries/'+that.state.queryNotifyCount)
 })
 .catch(function(error) {
@@ -385,15 +394,15 @@ endUserNotification=()=>{
   const db= firebase.firestore()
   
   const that = this;
-debugger
+
 console.log(that.state.unReadQueriesId)
   if(that.state.unSeenuserId.length===0){
-debugger
+
     that.goto('/myusers/'+that.state.userNotifyCount)
 
   }else{
 
-  debugger
+  
 
 that.state.unSeenuserId.map((id)=>{
 
@@ -554,66 +563,76 @@ return washingtonRef.update({
 
       </MDBNavbarNav>
 
-      
-      
       <MDBNavbarNav right>
-        <MDBNavItem>
-          
-          {this.state.isUserloggedIn ? (  <MDBNavItem>
-  <MDBDropdown>
-  <h5>
-    <MDBDropdownToggle nav caret>
-      <MDBIcon icon="user" className="mr-1" />{this.state.userName}
-    </MDBDropdownToggle>
-      </h5>
+      { this.state.loaderVisble?(   <Loader
+              type="ThreeDots"
+              color="green"
+              height={100}
+              width={100}
+              visible={this.state.loaderVisble}
+            //3 secs 
+            ></Loader>):( 
+   
+              <React.Fragment>
+              <MDBNavItem>
+                
+                {this.state.isUserloggedIn ? (  <MDBNavItem>
+        <MDBDropdown>
+        <h5>
+          <MDBDropdownToggle nav caret>
+            <MDBIcon icon="user" className="mr-1" />{this.state.userName}
+          </MDBDropdownToggle>
+            </h5>
+            
+          <MDBDropdownMenu className="dropdown-default" right>
+            <MDBDropdownItem onClick={()=>this.handleLogout()}>Log out</MDBDropdownItem>
+            <MDBDropdownItem onClick={()=>this.goto('/editprofile/'+ this.state.user_id)}>EditProfile</MDBDropdownItem>
+          </MDBDropdownMenu>
+        </MDBDropdown>
+      </MDBNavItem>):
+              (<MDBNavItem onClick={()=>this.goto('/login')}>
+                <h5>
+              <MDBNavLink >Register Now</MDBNavLink>
+              </h5>
+            </MDBNavItem>)
+               }
       
-    <MDBDropdownMenu className="dropdown-default" right>
-      <MDBDropdownItem onClick={()=>this.handleLogout()}>Log out</MDBDropdownItem>
-      <MDBDropdownItem onClick={()=>this.goto('/editprofile/'+ this.state.user_id)}>EditProfile</MDBDropdownItem>
-    </MDBDropdownMenu>
-  </MDBDropdown>
-</MDBNavItem>):
-        (<MDBNavItem onClick={()=>this.goto('/login')}>
-          <h5>
-        <MDBNavLink >Register Now</MDBNavLink>
-        </h5>
-      </MDBNavItem>)
-         }
-
-
-
-        </MDBNavItem>
-     
-{this.state.isAdminloggedIn?(
-
-  <MDBNavItem>
-    <MDBDropdown>
-    <h5>
-  
-      <MDBDropdownToggle nav caret>
       
-        <span className="mr-2"> {this.state.queryNotify || this.state.userNotify ?(<a><Icon loading name='bell' /> {this.state.queryNotifyCount + this.state.userNotifyCount}</a>):(null)} Actions</span>
+      
+              </MDBNavItem>
         
-      </MDBDropdownToggle>
-    </h5>
-      <MDBDropdownMenu>
-        <MDBDropdownItem onClick={()=>this.goto('/postProduct')}>Post Product</MDBDropdownItem>
-        <MDBDropdownItem onClick={()=>this.endUserNotification()}>{this.state.userNotify?(<a><Icon loading name='bell' /> {this.state.userNotifyCount}</a>):(null)}My users</MDBDropdownItem>
-        <MDBDropdownItem onClick={()=>this.endQueryNotification()}>{this.state.queryNotify?(<a><Icon loading name='bell' /> {this.state.queryNotifyCount}</a>):(null)}Queries</MDBDropdownItem>
-        <MDBDropdownItem onClick={()=>this.goto('/noticeBoard')}>Post Notice</MDBDropdownItem>
-        <MDBDropdownItem href="#!">Something else here</MDBDropdownItem>
-        <MDBDropdownItem href="#!">Something else here</MDBDropdownItem>
-      </MDBDropdownMenu>
-    </MDBDropdown>
-  </MDBNavItem>
-  ):(null)
-  }
-  
+      {this.state.isAdminloggedIn?(
+      
         <MDBNavItem>
-
+          <MDBDropdown>
+          <h5>
+        
+            <MDBDropdownToggle nav caret>
+            
+              <span className="mr-2"> {this.state.queryNotify || this.state.userNotify ?(<a><Icon loading name='bell' /> {this.state.queryNotifyCount + this.state.userNotifyCount}</a>):(null)} Actions</span>
+              
+            </MDBDropdownToggle>
+          </h5>
+            <MDBDropdownMenu>
+              <MDBDropdownItem onClick={()=>this.goto('/postProduct')}>Post Product</MDBDropdownItem>
+              <MDBDropdownItem onClick={()=>this.endUserNotification()}>{this.state.userNotify?(<a><Icon loading name='bell' /> {this.state.userNotifyCount}</a>):(null)}My users</MDBDropdownItem>
+              <MDBDropdownItem onClick={()=>this.endQueryNotification()}>{this.state.queryNotify?(<a><Icon loading name='bell' /> {this.state.queryNotifyCount}</a>):(null)}Queries</MDBDropdownItem>
+              <MDBDropdownItem onClick={()=>this.goto('/noticeBoard')}>Post Notice</MDBDropdownItem>
+              <MDBDropdownItem href="#!">Something else here</MDBDropdownItem>
+              <MDBDropdownItem href="#!">Something else here</MDBDropdownItem>
+            </MDBDropdownMenu>
+          </MDBDropdown>
         </MDBNavItem>
-      </MDBNavbarNav>
+        ):(null)
+        }
+        
+              <MDBNavItem>
+      
+              </MDBNavItem>
+              </React.Fragment> )}
 
+            </MDBNavbarNav>
+           
       
 
     </MDBCollapse>

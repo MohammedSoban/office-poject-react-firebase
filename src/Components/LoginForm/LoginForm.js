@@ -169,10 +169,16 @@ function signIn(){
         console.log('after login '+Response.user.uid)
         console.log(user.emailVerified)
 
+        setuserLogin({
+          email:'',
+        password:'',
+      
+      })
+
         alert('login successful!')
         setuserLogin({loaderVisible:false})
           goto('/')
-         
+      
         
       } else {
         console.log(user.emailVerified)
@@ -308,6 +314,7 @@ function signIn(){
             onClick={()=>goto('/signup')}>
               Signup
              </Button>
+
              <Loader 
                                     type="ThreeDots"
                                     color="green"
