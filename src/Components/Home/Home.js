@@ -61,6 +61,7 @@ const styles = theme => ({
   root: {
     maxWidth:"100%",
      flexGrow: 1,
+     margin:'auto'
      //marginLeft:'18%',
     // marginTop:'2%',
     

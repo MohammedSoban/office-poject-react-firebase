@@ -27,7 +27,7 @@ function App() {
   return (
     <BrowserRouter>
       <div className="App">
-
+<Header/>
         <Route exact path='/' component={Home} />
         <Route exact path='/login' component={LoginForm} />
         <Route exact path='/products' component={ProductsList} />

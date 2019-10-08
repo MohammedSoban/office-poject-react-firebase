@@ -299,6 +299,7 @@ debugger
                                 fileNames:fileName
                               })
                             }
+
                         console.log(count,'contttttttt')
                           if(this.state.files.length===urls.length){
                          
@@ -361,8 +362,6 @@ debugger
                               })
                            })
 
-                          }else{
-                              alert('unable to upload your product please try again')
                           }
                       }).catch((error)=>{
                          alert(error)
