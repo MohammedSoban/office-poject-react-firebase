@@ -438,7 +438,7 @@ class SearchAppBar extends Component {
       //     </AppBar>
       //   </div>
       //   </React.Fragment>
-<>
+<React.Fragment>
       <Router>
         <MDBNavbar
           color="unique-color-dark"
@@ -456,7 +456,7 @@ class SearchAppBar extends Component {
           </MDBNavbarBrand>
 
           <MDBNavbarBrand left>
-            <strong className="white-text">MOON STEEL FABRICATORS</strong>
+            <b> <h6 className="white-text">MOON STEEL FABRICATORS</h6></b>
           </MDBNavbarBrand>
 
           <MDBNavbarToggler onClick={this.toggleCollapse} />
@@ -593,12 +593,18 @@ class SearchAppBar extends Component {
                           >
                             Post Notice
                           </MDBDropdownItem>
-                          <MDBDropdownItem href="#!">
-                            Something else here
+                          <MDBDropdownItem
+                            onClick={() => this.goto("/addClients")}
+                          >
+                            Add Clients
                           </MDBDropdownItem>
-                          <MDBDropdownItem href="#!">
-                            Something else here
+
+                          <MDBDropdownItem
+                            onClick={() => this.goto("/viewClients")}
+                          >
+                            View Clients
                           </MDBDropdownItem>
+                        
                         </MDBDropdownMenu>
                       </MDBDropdown>
                     </MDBNavItem>
@@ -615,7 +621,7 @@ class SearchAppBar extends Component {
 
       <br/>
       <br/>
-</>
+      </React.Fragment>
     );
   }
 }

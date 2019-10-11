@@ -304,7 +304,7 @@ debugger
                           if(this.state.files.length===urls.length){
                          
                         debugger
-
+                                
                           let { productName,
                             files,
                              productSpecification,

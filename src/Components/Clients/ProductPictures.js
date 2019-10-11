@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import MobileStepper from '@material-ui/core/MobileStepper';
 import Paper from '@material-ui/core/Paper';
@@ -8,6 +8,8 @@ import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import SwipeableViews from 'react-swipeable-views';
 import { autoPlay } from 'react-swipeable-views-utils';
+import { withStyles } from '@material-ui/core/styles';
+import firebase from '../Config/config.js'
 
 import Costa from './costa.gif'
 import dd from './dd.gif'
@@ -28,6 +30,7 @@ import sb from './sb.gif'
 import searle from './searle.gif'
 import Serena from './Serena.gif'
 import shereton from './shereton.gif'
+
 
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
@@ -107,7 +110,7 @@ const tutorialSteps = [
 
 ];
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
   root: {
     maxWidth: 300,
     flexGrow: 1,
@@ -129,48 +132,85 @@ const useStyles = makeStyles(theme => ({
     overflow: 'hidden',
     width: '100%',
   },
-}));
+});
 
-function SwipeableTextMobileStepper() {
-  const classes = useStyles();
-  const theme = useTheme();
-  const [activeStep, setActiveStep] = React.useState(0);
-  const maxSteps = tutorialSteps.length;
 
-  const handleNext = () => {
-    setActiveStep(prevActiveStep => prevActiveStep + 1);
-  };
 
-  const handleBack = () => {
-    setActiveStep(prevActiveStep => prevActiveStep - 1);
-  };
+class SwipeableTextMobileStepper extends Component  {
 
-  const handleStepChange = step => {
-    setActiveStep(step);
-  };
+  constructor(props) {
+    super(props);
+    
+    this.state = {
+      activeStep:0,
+      clients:[]
+    }
+  
+  
+  }
+
+  componentDidMount=()=>{
+
+    const db=firebase.firestore()
+    var that=this
+    var holdCLients=[]
+    db.collection("clients").get().then(function(querySnapshot) {
+      querySnapshot.forEach(function(doc) {
+          // doc.data() is never undefined for query doc snapshots
+          console.log(doc.id, " => ", doc.data());
+        holdCLients.push(doc.data())
+      });
+      that.setState({
+        clients:holdCLients
+      })
+  });
+  
+  }
+
+
+  handleStepChange=client=>{
+    
+      
+    this.setState({
+      activeStep:client
+    })
+    
+  }
+
+
+  render(){
+
+    const { classes } = this.props
+
+
+
+
 
   return (
     <div className={classes.root}>
-       {/* <Paper square elevation={0} className={classes.header}>
-       <Typography>{tutorialSteps[activeStep].label}</Typography> 
-      </Paper>  */}
-      <AutoPlaySwipeableViews
-        axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-        index={activeStep}
-        onChangeIndex={handleStepChange}
+       <AutoPlaySwipeableViews
+        axis={styles.direction === 'rtl' ? 'x-reverse' : 'x'}
+        index={this.state.activeStep}
+        onChangeIndex={()=>this.handleStepChange()}
         enableMouseEvents
       >
-        {tutorialSteps.map((step, index) => (
-          <div key={step.label}>
-            {Math.abs(activeStep - index) <= 2 ? (
-              <img className={classes.img} src={step.imgPath} alt/>
-            ) : null}
+          
+        {this.state.clients.map((client, index) => (
+
+          <div key={index}>
+              
+           
+              <img className={classes.img} src={client.imageUrl} alt={client.clientName} />    
+              <br/>         
+              <h4>{client.clientName}</h4>
+            
           </div>
+
         ))}
       </AutoPlaySwipeableViews>
      
     </div>
   );
 }
-
-export default SwipeableTextMobileStepper;
+}
+export default withStyles(styles)(SwipeableTextMobileStepper);

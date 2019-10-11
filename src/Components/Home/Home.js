@@ -164,9 +164,9 @@ componentDidMount=()=>{
             
           <div key={index}>
               
-            {Math.abs(0 - index) <= 4 ? (
+           
               <img className={classes.img} src={step.imgPath} alt={step.label} />             
-            ) : null}
+        
             
           </div>
 

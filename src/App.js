@@ -18,7 +18,10 @@ import myUsers from './Components/AdminActions/myUsers';
 import Queries from './Components/AdminActions/Queries';
 import EditProfile from './Components/EditProfile/EditProfile';
 import NoticeBoard from './Components/AdminActions/NoticeBoard';
+import addClients from './Components/AdminActions/addClients';
 import PrivateRoute from "./Components/PrivateRoute"
+import viewClients from './Components/AdminActions/viewClients';
+import editClients from './Components/AdminActions/editClients';
 
 
 
@@ -37,9 +40,13 @@ function App() {
         <Route exact path='/services' component={Services} />
         <Route exact path='/clients' component={Clients} />
         <Route exact path='/contactUs' component={Contact} />
+        {/* <Route exact path='/editClients/:clients_id' component={editClients} /> */}
+        {/* <Route exact path='/addClients' component={addClients} /> */}
 
         <Switch>
+        <PrivateRoute exact path='/viewClients' component={viewClients} />
         <PrivateRoute exact path='/postProduct' component={PostProductForm} />
+        <PrivateRoute exact path='/addClients' component={addClients} />
         <PrivateRoute exact path='/editProduct/:product_id' component={EditProduct} />
         <PrivateRoute exact path='/myusers/:notificationCount' component={myUsers} />
         <PrivateRoute exact path='/queries/:notificationCount' component={Queries} />
