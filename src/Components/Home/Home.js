@@ -21,6 +21,16 @@ import "react-alice-carousel/lib/alice-carousel.css";
 import AliceCarousel from 'react-alice-carousel';
 import "react-alice-carousel/lib/alice-carousel.css";
 import { Timestamp } from '@google-cloud/firestore';
+import one from './slideshow/1.jpg'
+import two from './slideshow/2.jpg'
+import three from './slideshow/3.jpg'
+import four from './slideshow/4.jpg'
+import five from './slideshow/5.jpg'
+import six from './slideshow/6.jpg'
+import seven from './slideshow/7.jpg'
+import eight from './slideshow/8.jpg'
+import nine from './slideshow/9.jpg'
+
 
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
@@ -28,30 +38,38 @@ const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
 
 const tutorialSteps = [
+
+  {
+    label: 'Goč, Serbia',
+    imgPath:nine
+  },
   {
     label: 'San Francisco – Oakland Bay Bridge, United States',
-    imgPath:`http://banella.co.za/wp-content/uploads/2013/11/jpeg-8.jpg`,
+    imgPath:one,
   },
   {
     label: 'Bird',
-    imgPath:
-      'https://saadegroup.mn/wp-content/uploads/2018/03/f1.jpg',
+    imgPath:two
   },
   {
     label: 'Bali, Indonesia',
-    imgPath:
-      'http://moonsteelfab.com/products/counters/images/IMG_1465.JPG',
+    imgPath:three,
   },
+
   {
-    label: 'NeONBRAND Digital Marketing, Las Vegas, United States',
-    imgPath:
-      'https://scontent.fkhi6-1.fna.fbcdn.net/v/t1.0-9/18739683_834348016721843_7141563245342961610_n.jpg?_nc_cat=102&_nc_eui2=AeHqg9RGfQ3YS8eeuTJp46mLBJ3S0WekFDtlCK_USW8vqZ7lDR6Q-cXCJkK0-40ZR7ske_uCtrBWbuIfd-FpUlusjX3B11MOMWivc6cYLpuJYg&_nc_oc=AQmIzfAisci3lfmCvjABui_WFE0ImiMmf8BQM6o51rOMPkYBarluosHLTh2LsQUHfg4&_nc_ht=scontent.fkhi6-1.fna&oh=42624a0c7c9931bf5a5cafc49d4fca02&oe=5DE61A4F',
+    label: 'Goč, Serbia',
+    imgPath:five
   },
   {
     label: 'Goč, Serbia',
-    imgPath:
-      'http://moonsteelfab.com/products/counters/images/IMG_1460.JPG',
+    imgPath:six
   },
+  {
+    label: 'Goč, Serbia',
+    imgPath:seven
+  },
+
+
 ];
 
 
@@ -61,7 +79,7 @@ const styles = theme => ({
   root: {
     maxWidth:"100%",
      flexGrow: 1,
-     margin:'auto'
+    // margin:'auto'
      //marginLeft:'18%',
     // marginTop:'2%',
     
@@ -74,7 +92,7 @@ const styles = theme => ({
      backgroundColor: theme.palette.background.default,
    },
    img: {
-     height: 470,
+     height: 530,
      display: 'block',
      maxWidth: 'auto',
      overflow: 'hidden',
@@ -165,7 +183,7 @@ componentDidMount=()=>{
           <div key={index}>
               
            
-              <img className={classes.img} src={step.imgPath} alt={step.label} />             
+              <img className={classes.img} src={step.imgPath} />             
         
             
           </div>
@@ -217,13 +235,13 @@ The ethos of the company lay utmost emphasize on quality, durability by using th
       <br/>
       <Header as='h1'>Services</Header>
       <li>
-        Plannig
+        Planning
       </li>
       <li>
       Designing and Drawing
       </li>
 <li>
-Designing and Drawing
+customization
 </li>
 <li>
 Fabrication

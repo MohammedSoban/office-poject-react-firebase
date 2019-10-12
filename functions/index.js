@@ -67,13 +67,14 @@ exports.sendQuery = functions.firestore
       const newValue = snap.data();
 
       // access a particular field as you would any JS property
+      const referenceID= context.params.QueriesId
       const name = newValue.name;
       const email = newValue.email;
       const subject = newValue.subject;
       const message = newValue.message;
 
       // perform desired operations ...
-      return sendQueryEmail(name,email,subject,message);
+      return sendQueryEmail(referenceID,name,email,subject,message);
     });
 ///////////////////////////
 exports.sendReference = functions.firestore
@@ -112,16 +113,21 @@ exports.closeQuery = functions.firestore
 // Sends a welcome email to the given user.
 async function sendWelcomeEmail(email, displayName) {
   const mailOptions = {
-    from: `${APP_NAME} <noreply@firebase.com>`,
+    from: `${APP_NAME}`,
     to: email,
     
   };
 
   // The user subscribed to the newsletter.
   mailOptions.subject = `Welcome to ${APP_NAME}!`;
-  mailOptions.text = `Hey ${displayName || ''}!, We confirm that we have deleted your ${APP_NAME} account.`;
+  mailOptions.text = `Hey ${displayName || ''}!, We confirm that we have deleted your ${APP_NAME} account.
   
-  mailOptions.html=<img src={}/>
+
+
+  This is an automatically generated email – please do not reply to it. 
+  If you have any queries please email at moonsteelf@gmail.com`;
+  
+
   
   await mailTransport.sendMail(mailOptions);
   console.log('New welcome email sent to:', email);
@@ -130,15 +136,15 @@ async function sendWelcomeEmail(email, displayName) {
 }
 
 
-async function sendQueryEmail(name,email,subject,message) {
+async function sendQueryEmail(referenceID,name,email,subject,message) {
   const mailOptions = {
     from:`${email}`,
     to: 'moonsteelf@gmail.com',
   };
 
   // The user subscribed to the newsletter.
-  mailOptions.subject = `Query ${subject}`;
-  mailOptions.text = `${name} says "${message}"  reply me back on ${email}`;
+  mailOptions.subject = `Query:${subject}`;
+  mailOptions.text = `Query refernce Id ${referenceID}  ${name} says "${message}"  reply me back on ${email}`;
   await mailTransport.sendMail(mailOptions);
   console.log('New welcome email sent to:', email);
 
@@ -156,10 +162,10 @@ async function sendReferenceEmail(email,referenceID,name) {
   mailOptions.subject = `MoonSteelFab: your query has been successfully posted`;
   mailOptions.text = `Dear ${name}, 
   
-
   your query refernce ID is:${referenceID}
 
-  This is an automatically generated email – please do not reply to it. If you have any queries please email moonsteelf@gmail.com`;
+  This is an automatically generated email – please do not reply to it. 
+  If you have any queries please email at moonsteelf@gmail.com`;
   await mailTransport.sendMail(mailOptions);
   console.log('New welcome email sent to:', email);
 
@@ -180,7 +186,8 @@ async function sendQueryCloseEmail(email,referenceID,name) {
   your query with refernce ID:${referenceID} has been closed.
 
 
-  This is an automatically generated email – please do not reply to it. If you have any queries please email moonsteelf@gmail.com`;
+  This is an automatically generated email – please do not reply to it. 
+  If you have any queries please email at moonsteelf@gmail.com`;
   await mailTransport.sendMail(mailOptions);
   console.log('New welcome email sent to:', email);
 

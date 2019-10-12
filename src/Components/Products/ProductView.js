@@ -334,7 +334,7 @@ class ProductView extends Component {
                   <Grid.Row centered={true}>
 
                     <Grid.Column width={10}>
-                      <h3>Overall ratins</h3>
+                      <h3>Overall ratings</h3>
                       <div>
                         <Rating icon='star' defaultRating={this.state.overAllRating} rating={this.state.overAllRating} maxRating={5} disabled={true} /> ({this.state.productRatings.length})</div>
                       <br />

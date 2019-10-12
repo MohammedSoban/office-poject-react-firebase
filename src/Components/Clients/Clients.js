@@ -88,8 +88,9 @@ class Clients extends Component {
 
       </Grid.Column>
       <Grid.Column width={9} >
+      <h1 style={{alignItems:'center'}}>Our Clients</h1>
               <Container text textAlign='left'>
-      <h1 >Our Clients</h1>
+     
            
     <Header as='h2'>Resturants</Header>
     <p>
