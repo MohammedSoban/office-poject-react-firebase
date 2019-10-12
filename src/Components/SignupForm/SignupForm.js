@@ -32,6 +32,7 @@ import {
   MuiThemeProvider,
   createMuiTheme
 } from "@material-ui/core/styles";
+import Footer from '../Footer/Footer'
 
 //const functions = require('firebase-functions');
 
@@ -369,6 +370,7 @@ class RecipeReviewCard extends Component {
             ></Loader>
           </CardContent>
         </Card>
+        <Footer/>
       </React.Fragment>
     );
   }

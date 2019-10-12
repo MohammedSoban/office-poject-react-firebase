@@ -12,9 +12,7 @@ class PrivateRoute extends React.Component {
     }
 
     componentDidMount() {
-        debugger
         firebase.auth().onAuthStateChanged((user) => {
-            debugger
             if (user) {
                 this.setState({
                     loading: false,
@@ -74,9 +72,5 @@ class PrivateRoute extends React.Component {
 //         />
 //     )
 // }
-
-PrivateRoute.propTypes = {
-    isAuthenticated: PropTypes.bool.isRequired
-};
 
 export default PrivateRoute;

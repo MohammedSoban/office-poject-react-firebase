@@ -190,7 +190,7 @@ class SearchAppBar extends Component {
         // User is signed in.
         console.log("i am if cdm " + user.email + " " + user.uid);
         console.log(user.displayName);
-        if (user.email === "mohammedsoban1@gmail.com") {
+        if (user.email === "mohammedsoban1@gmail.com" || user.email==="arkhan2@hotmail.com" || user.emai==="ovaiswaraich@gmail.com") {
           that.setState({ isAdminloggedIn: true, loaderVisble: false });
         }
         that.setState({
@@ -449,14 +449,14 @@ class SearchAppBar extends Component {
 
           //scrolling={true}
         >
-          <MDBNavbarBrand onClick={() => this.goto("/")}>
+          <MDBNavbarBrand className="main-logo" onClick={() => this.goto("/")}>
             <MDBNavLink href="/">
               <img src={MsfLogo} height="50" />
             </MDBNavLink>
           </MDBNavbarBrand>
 
           <MDBNavbarBrand left>
-            <b> <h6 className="white-text">MOON STEEL FABRICATORS</h6></b>
+            <b> <h6 className="white-text logo-text">MOON STEEL FABRICATORS</h6></b>
           </MDBNavbarBrand>
 
           <MDBNavbarToggler onClick={this.toggleCollapse} />

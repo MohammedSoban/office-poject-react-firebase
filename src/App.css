@@ -23,6 +23,17 @@
   color: #61dafb;
 }
 
+@media only screen and (max-width: 400px){
+  .main-logo{
+    margin-right: 0 !important;
+  }
+  .logo-text{
+    font-size: 12px !important;
+  }
+}
+
+
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

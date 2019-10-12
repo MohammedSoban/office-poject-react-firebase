@@ -46,6 +46,7 @@ import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import { user } from "firebase-functions/lib/providers/auth";
 import PassReset from "./PassReset";
 import { Buttons, Headers, Image, Modal } from "semantic-ui-react";
+import Footer from '../Footer/Footer'
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -298,6 +299,7 @@ function RecipeReviewCard(props) {
           </CardContent>
         </Card>
       </Paper>
+      {/* <Footer/> */}
     </React.Fragment>
   );
 }

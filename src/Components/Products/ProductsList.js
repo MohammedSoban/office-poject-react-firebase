@@ -86,7 +86,7 @@ class SpacingGrid extends Component {
     firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
         // User is signed in.
-        if (user.email === "mohammedsoban1@gmail.com") {
+        if (user.email === "mohammedsoban1@gmail.com" || user.email==="arkhan2@hotmail.com" || user.emai==="ovaiswaraich@gmail.com") {
           that.setState({ isAdminloggedIn: true });
         }
       } else {

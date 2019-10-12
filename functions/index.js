@@ -19,8 +19,8 @@ const nodemailer = require('nodemailer');
 // 2. https://accounts.google.com/DisplayUnlockCaptcha
 // For other types of transports such as Sendgrid see https://nodemailer.com/transports/
 // TODO: Configure the `gmail.email` and `gmail.password` Google Cloud environment variables.
-const gmailEmail = 'mohammedsoban27@gmail.com';
-const gmailPassword = 'Soban123.';
+const gmailEmail = 'moonsteelfabricators@gmail.com';
+const gmailPassword = 'Laserjet4567';
 const mailTransport = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -31,7 +31,7 @@ const mailTransport = nodemailer.createTransport({
 
 // Your company name to include in the emails
 // TODO: Change this to your app or company name to customize the email sent.
-const APP_NAME = 'Cloud Storage for Firebase quickstart';
+const APP_NAME = 'Moon Steel Fabricators';
 
 // [START sendWelcomeEmail]
 /**
@@ -114,11 +114,15 @@ async function sendWelcomeEmail(email, displayName) {
   const mailOptions = {
     from: `${APP_NAME} <noreply@firebase.com>`,
     to: email,
+    
   };
 
   // The user subscribed to the newsletter.
   mailOptions.subject = `Welcome to ${APP_NAME}!`;
   mailOptions.text = `Hey ${displayName || ''}!, We confirm that we have deleted your ${APP_NAME} account.`;
+  
+  mailOptions.html=<img src={}/>
+  
   await mailTransport.sendMail(mailOptions);
   console.log('New welcome email sent to:', email);
 
@@ -129,7 +133,7 @@ async function sendWelcomeEmail(email, displayName) {
 async function sendQueryEmail(name,email,subject,message) {
   const mailOptions = {
     from:`${email}`,
-    to: 'mohammedsoban1@gmail.com',
+    to: 'moonsteelf@gmail.com',
   };
 
   // The user subscribed to the newsletter.
@@ -155,7 +159,7 @@ async function sendReferenceEmail(email,referenceID,name) {
 
   your query refernce ID is:${referenceID}
 
-  this is an automated email don't reply Thankyou!`;
+  This is an automatically generated email – please do not reply to it. If you have any queries please email moonsteelf@gmail.com`;
   await mailTransport.sendMail(mailOptions);
   console.log('New welcome email sent to:', email);
 
@@ -176,7 +180,7 @@ async function sendQueryCloseEmail(email,referenceID,name) {
   your query with refernce ID:${referenceID} has been closed.
 
 
-  this is an automated email don't reply Thank you!`;
+  This is an automatically generated email – please do not reply to it. If you have any queries please email moonsteelf@gmail.com`;
   await mailTransport.sendMail(mailOptions);
   console.log('New welcome email sent to:', email);
 

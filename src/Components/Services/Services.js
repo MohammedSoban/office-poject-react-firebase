@@ -40,7 +40,7 @@ class Services extends Component {
     <p>
     The MSF fulfills requirements by planning according to different environment such as hospitals, commercial kitchens, medical laboratories and restaurants with respect to their process or functionality.
     </p>
-    <Image src={Planning} width='700' height='300'/>
+    <Image src={Planning} width='100%' height='300'/>
     <Header as='h2'>Designing and Drawing</Header>
     <p>
     The MSF provides designing support for production of new equipment and develop new products. With ample expertise in Auto-Cad, the MSF specializes in drawing 
@@ -51,7 +51,7 @@ class Services extends Component {
     <p>
     The MSF has the ability to custom built products according to our client’s need as per their requirement and deliver a satisfactory result.
     </p>
-    <Image src={Customization} width='800' height='300'/>
+    <Image src={Customization} width='100%' height='300'/>
     <Header as='h2'>Fabrication</Header>
     <p>
     The most important task at the MSF, the fabrication, is carried out using state-of-art technology and machinery imported from Germany, 
