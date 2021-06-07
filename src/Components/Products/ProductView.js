@@ -23,6 +23,9 @@ import { Rating } from 'semantic-ui-react'
 import { Icon } from 'semantic-ui-react'
 import { withRouter } from 'react-router-dom'
 
+import ReactDOM from 'react-dom';
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { Carousel } from 'react-responsive-carousel';
 
 const styles = theme => ({
   root: {
@@ -99,7 +102,7 @@ class ProductView extends Component {
     const tempImages = []
 
     let id = this.props.match.params.product_id
-    // debugger
+    // 
     this.setState({
       product_id: id
     })
@@ -108,7 +111,7 @@ class ProductView extends Component {
 
     docRef.get().then(function (doc) {
       if (doc.exists) {
-        console.log("Document data:", doc.data());
+
 
         var obj = {}
 
@@ -127,13 +130,12 @@ class ProductView extends Component {
 
 
 
-        console.log(tempImages)
+
 
         that.setState({
           images: tempImages
         })
 
-        console.log(that.state.images)
 
 
 
@@ -146,7 +148,7 @@ class ProductView extends Component {
         }
 
 
-        console.log(obj.productSpecification.length)
+
 
         if (obj.productSpecification.length === 0) {
           that.state.product.productSpecification.push('N/A')
@@ -157,10 +159,10 @@ class ProductView extends Component {
 
       } else {
         // doc.data() will be undefined in this case
-        console.log("No such document!");
+
       }
     }).catch(function (error) {
-      console.log("Error getting document:", error);
+
       alert(error)
     })
 
@@ -174,8 +176,7 @@ class ProductView extends Component {
 
         const db = firebase.firestore();
 
-        debugger
-        console.log(that.state.product_id)
+
         var alreadyRatedHolder = []
         db.collection("ratings").where("product_id", "==", `${that.state.product_id}`).where("user_id", "==", `${user.uid}`)
           .onSnapshot(function (querySnapshot) {
@@ -184,7 +185,7 @@ class ProductView extends Component {
               //console.log(doc.id, " => ", doc.data());
               alreadyRatedHolder.push(doc.data())
             });
-            console.log(alreadyRatedHolder)
+
             if (alreadyRatedHolder.length != 0) {
               that.setState({
                 alreadyRated: true,
@@ -209,17 +210,17 @@ class ProductView extends Component {
 
 
 
-    debugger
-    console.log(that.state.product_id)
+
+
     var productRatingHodler = []
     db.collection('ratings').where("product_id", "==", `${id}`)
       .onSnapshot(function (querySnapshot) {
         querySnapshot.forEach(function (doc) {
-          console.log(doc.id, " => ", doc.data());
-          debugger
+
+
 
           productRatingHodler.push({ ...doc.data(), rating_id: doc.id })
-          debugger
+
         })
         that.setState({
           productRatings: productRatingHodler
@@ -234,8 +235,7 @@ class ProductView extends Component {
 
         overAllRatingHolder = sumOfRatings / that.state.productRatings.length
 
-        console.log(sumOfRatings)
-        console.log(overAllRatingHolder)
+
 
         that.setState({
           overAllRating: overAllRatingHolder
@@ -255,7 +255,7 @@ class ProductView extends Component {
       alreadyRated: true
     })
 
-    console.log(this.state.rating)
+
     const db = firebase.firestore();
 
     db.collection("ratings").doc().set({
@@ -265,11 +265,11 @@ class ProductView extends Component {
       seen: false
     })
       .then(function () {
-        console.log("Document successfully written!");
+
         alert('you have sccuessfully rated the product thank you')
       })
       .catch(function (error) {
-        console.error("Error writing document: ", error);
+
         alert('Unable to rate the product', error)
       });
 
@@ -304,18 +304,42 @@ class ProductView extends Component {
             ></Loader>
           ) : (
 
-              <React.Fragment>
-
+            <React.Fragment>
+              <div className='fade-in-top'>
                 <Grid celled='internally'
-                  stackable>
-                  <Grid.Row>
+                  stackable
+
+                >
+
+                  <Grid.Row  >
                     <Grid.Column width={3}>
                       <h3>Clients</h3>
                       <ProductPicture />
                     </Grid.Column>
-                    <Grid.Column width={10}>
 
-                      <ImageGallery
+                    <Grid.Column width={7}>
+
+
+                      <Carousel
+                        dynamicHeight={false}
+                        showThumbs={false}
+                        dynamicHeight={true}
+                        useKeyboardArrows={true}
+
+                      >
+
+                        {this.state.images.map((image, index) => {
+                          return (
+                            <div style={{ display: "inline-block", overflow: "hidden", width: "100%", }}>
+                              <img src={image.original} height="100%" width="100%" />
+                            </div>
+                          )
+                        })
+                        }
+
+                      </Carousel>
+                      {/* <ImageGallery
+                      
                         items={this.state.images}
                         showIndex={true}
                         //lazyLoad={true}
@@ -323,20 +347,17 @@ class ProductView extends Component {
                         // useBrowserFullscreen={false}
                         // showFullscreenButton={true} 
                         showPlayButton={false}
-
+                         slideInterval='2000'
+                       
                       //showNav={false}
 
-                      />
+                      /> */}
+
                     </Grid.Column>
-
-                  </Grid.Row>
-
-                  <Grid.Row centered={true}>
-
-                    <Grid.Column width={10}>
+                    <Grid.Column width={6} textAlign='left'>
                       <h3>Overall ratings</h3>
                       <div>
-                        <Rating icon='star' defaultRating={this.state.overAllRating} rating={this.state.overAllRating} maxRating={5} disabled={true} /> ({this.state.productRatings.length})</div>
+                        <Rating icon='star' defaultRating={this.state.overAllRating} rating={this.state.overAllRating} maxRating={5} disabled={true} /> ({this.state.productRatings.length} Reviews)</div>
                       <br />
                       <Typography variant='h3' display='block'>
                         {this.state.product.productName}
@@ -412,28 +433,16 @@ class ProductView extends Component {
                         }
                       </Table>
 
-
-
-
-                    </Grid.Column>
-
-                  </Grid.Row>
-
-                  <Grid.Row centered={true}>
-                    <Grid.Column width={10}>
-
-                      <FacebookProvider appId="123456789">
-                        <CommentsCount href="http://www.facebook.com" />
-                      </FacebookProvider>
-
                     </Grid.Column>
                   </Grid.Row>
+
+
 
                 </Grid>
 
-
-              </React.Fragment>
-            )
+              </div>
+            </React.Fragment>
+          )
 
         }
 

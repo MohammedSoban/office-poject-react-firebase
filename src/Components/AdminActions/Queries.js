@@ -34,19 +34,19 @@ class Queries extends Component {
       
       let notificationCount =that.props.match.params.notificationCount
 
-      console.log(notificationCount)
+   
 
       that.setState({
         notificationCount:notificationCount
       })
- console.log(that.state.notificationCount)
+ 
 
  if(notificationCount==='false'){
    notificationCount=0
  }
 
       if(notificationCount!=0){
-        debugger
+        
         that.setState({
           newData:true
         })
@@ -59,7 +59,7 @@ class Queries extends Component {
         db.collection("Queries").orderBy('timestamp','desc').get().then(function(querySnapshot) {
           querySnapshot.forEach(function(doc) {
               // doc.data() is never undefined for query doc snapshots
-              console.log(doc.id, " => ", doc.data());
+             
               queryHolder.push({...doc.data(),query_id:doc.id})
           });
     
@@ -81,14 +81,14 @@ class Queries extends Component {
         const db =firebase.firestore();
 
         db.collection("Queries").doc(query_id).delete().then(function() {
-            console.log("Document successfully deleted!");
+         
             that.state.queries.splice(index,1)
             that.setState({
                 queries:that.state.queries
             })
             alert('query succesfully Closed')
         }).catch(function(error) {
-            console.error("Error removing document: ", error);
+      
             alert('error closing query ',error)
         });
       }
@@ -101,7 +101,7 @@ class Queries extends Component {
 
   
 <br/>
-  
+<div className='fade-in-top'>
   <div style={{ 
     minHeight:600
   }}
@@ -197,7 +197,7 @@ class Queries extends Component {
 </Grid>
 
 </div>
-
+</div>
 <Footer/>
 
             </React.Fragment>

@@ -130,7 +130,7 @@ const db =firebase.firestore();
 docRef.get().then(function(doc) {
     if (doc.exists) {
        
-        console.log("Document data:", doc.data());
+       
       var obj=doc.data()
 
       that.setState({
@@ -148,7 +148,7 @@ docRef.get().then(function(doc) {
         initialLoader:false
       })
         // doc.data() will be undefined in this case
-        console.log("No such document!");
+      
         alert('no data found')
     }
 
@@ -157,7 +157,7 @@ docRef.get().then(function(doc) {
   that.setState({
     initialLoader:false
   })
-    console.log("Error getting document:", error);
+  
     alert('refresh the page please ',error)
 });
 
@@ -189,7 +189,7 @@ docRef.get().then(function(doc) {
       this.setState({
         loaderVisible:true
     })
-        debugger
+        
 var that=this
 
 let {firstName,lastName,companyName}=that.state
@@ -197,7 +197,7 @@ let {firstName,lastName,companyName}=that.state
 
 const db =firebase.firestore();
         var washingtonRef = db.collection("users").doc(that.state.id);
-debugger
+
 // Set the "capital" field of the city 'DC'
 return washingtonRef.update({
     firstName:firstName,
@@ -206,7 +206,7 @@ return washingtonRef.update({
 })
 
 .then(function() {
-    console.log("Document successfully updated!");
+
 
     var user = firebase.auth().currentUser;
     let userName=that.state.firstName+' '+that.state.lastName
@@ -214,10 +214,10 @@ return washingtonRef.update({
                 displayName: userName,
               }).then(function() {
                 // Update successful.'
-                debugger
+                
               }).catch(function(error) {
                 // An error happened.
-                debugger
+                
                 that.setState({
                   loaderVisible:false
                 })
@@ -232,9 +232,9 @@ return washingtonRef.update({
 })
 .catch(function(error) {
     // The document probably doesn't exist.
-    console.error("Error updating document: ", error);
+
     alert('Error updating profile',error)
-    debugger
+    
     that.setState({
         loaderVisible:false
     })
@@ -251,7 +251,9 @@ return washingtonRef.update({
                 <React.Fragment>
       <Header/>
 
-
+      <div className='fade-in-top' style={{ 
+    minHeight:600
+  }}>
 
 {this.state.initialLoader?(<Loader
   type="ThreeDots"
@@ -260,14 +262,14 @@ return washingtonRef.update({
   width={100}
   visible={this.state.initialLoader}
 //3 secs 
->Fetching Data</Loader>):(  <Card className={classes.card}>
+>Fetching Data</Loader>):( <div className='fade-in-top'> <Card className={classes.card}>
       <CardContent>
         
       <img src={User} width='80' height='80'/>
        <h1>Edit Profile</h1>
 
       <Typography variant='h6'>
-       'Email Adress cannot be edited' {this.state.email}
+       'Email Address cannot be edited' {this.state.email}
         
       </Typography>
 
@@ -324,9 +326,9 @@ return washingtonRef.update({
                                     //3 secs 
                                     ></Loader>
       </CardContent>
-    </Card>)}
+    </Card> </div>)}
       
-
+    </div>
 <Footer/>
     </React.Fragment>
             </div>

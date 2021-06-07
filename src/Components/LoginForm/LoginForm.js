@@ -145,8 +145,7 @@ function RecipeReviewCard(props) {
         var user = firebase.auth().currentUser;
 
         if (user.emailVerified) {
-          console.log("after login " + Response.user.uid);
-          console.log(user.emailVerified);
+          
 
           setuserLogin({
             email: "",
@@ -157,7 +156,7 @@ function RecipeReviewCard(props) {
           setuserLogin({ loaderVisible: false });
           goto("/");
         } else {
-          console.log(user.emailVerified);
+      
 
           setuserLogin({
             email: "",
@@ -189,7 +188,7 @@ function RecipeReviewCard(props) {
             })
             .catch(function(error) {
               // An error happened.
-              console.log("user not logged out");
+           
               setuserLogin({ loaderVisible: false });
             });
         }
@@ -214,6 +213,7 @@ function RecipeReviewCard(props) {
   return (
     <React.Fragment>
       <Header />
+      <div className='fade-in-top'>
       <Paper className={classes.root}>
         <Card className={classes.card}>
           <CardContent>
@@ -299,6 +299,7 @@ function RecipeReviewCard(props) {
           </CardContent>
         </Card>
       </Paper>
+      </div>
       {/* <Footer/> */}
     </React.Fragment>
   );

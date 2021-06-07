@@ -53,7 +53,7 @@ var that=this
 
  
   alert('Notice successfully posted')
-    console.log("Document successfully written!");
+   
     that.setState({
       noticeTitle:'',
       noticeDescription:''
@@ -61,7 +61,7 @@ var that=this
     
 })
 .catch(function(error) {
-    console.error("Error writing document: ", error);
+   
     alert('Unable to post your notice ',error)
 });
 
@@ -74,6 +74,7 @@ var that=this
             <React.Fragment>
               
             <Header/>
+            <div className='fade-in-top'>
             <div style={{ 
     minHeight:600,
     marginTop:'5%',
@@ -125,6 +126,7 @@ var that=this
     </MDBContainer>
     </div>
         <Footer/>
+        </div>
         </React.Fragment>
         );
     }

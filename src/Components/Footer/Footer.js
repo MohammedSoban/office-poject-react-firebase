@@ -73,8 +73,8 @@ const FooterPagePro = () => {
             </p>
         
             <p>
-            <a href='mailto:moonsteelf@gmail.com'>
-              <i className="fa fa-envelope mr-3" />moonsteelf@gmail.com
+            <a href='mailto:info@moonsteelfab.com'>
+              <i className="fa fa-envelope mr-3" />info@moonsteelfab.com
               </a>
             </p>
             <p>

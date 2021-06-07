@@ -21,8 +21,39 @@ import ModalImage from "react-modal-image";
 import ImgsViewer from 'react-images-viewer'
 import { Zoom } from 'react-slideshow-image';
 import ProductPictures from './ProductPictures'
+import firebase from '../Config/config.js'
 
 class Clients extends Component {
+
+        constructor(props) {
+                super(props);
+                
+                this.state = {
+                  activeStep:0,
+                  clients:[]
+                }
+              
+              
+              }
+            
+              componentDidMount=()=>{
+            
+                const db=firebase.firestore()
+                var that=this
+                var holdCLients=[]
+                db.collection("clients").get().then(function(querySnapshot) {
+                  querySnapshot.forEach(function(doc) {
+                      // doc.data() is never undefined for query doc snapshots
+                    
+                    holdCLients.push(doc.data())
+                  });
+                  that.setState({
+                    clients:holdCLients
+                  })
+              });
+              
+              }
+            
     render() {
 
         const images = [
@@ -72,7 +103,43 @@ class Clients extends Component {
             <React.Fragment>
             <Headers/>
            <br/>
+           <div className='fade-in-top'>
 
+
+           <Grid celled='internally'
+                  stackable
+                //  centered={true}
+                 columns={5}
+                 >
+                         <Grid.Row >
+                      <Grid.Column width={3}
+    //mobile={8}
+      >
+              <h1>Clients</h1>
+      <ProductPictures/>
+
+      </Grid.Column>
+
+                  
+                    <Grid.Column width={10}>
+                      <div style={{justifyContent:'inline'}}>{this.state.clients.map((client,index)=>{
+                              return(                               
+                    <img src={client.imageUrl} width='120px' height='120px'/>                
+                              )
+                })
+                } </div>
+                    </Grid.Column>
+
+                    <Grid.Column width={3}
+    //mobile={8}
+      >
+    
+
+      </Grid.Column>
+                    </Grid.Row>
+
+          
+</Grid>
 
            <Grid celled='internally'
            //centered={true}
@@ -83,11 +150,11 @@ class Clients extends Component {
     <Grid.Column width={3}
     //mobile={8}
       >
-              <h1>Clients</h1>
-      <ProductPictures/>
+              {/* <h1>Clients</h1>
+      <ProductPictures/> */}
 
       </Grid.Column>
-      <Grid.Column width={9} >
+      <Grid.Column width={10} >
       <h1 style={{alignItems:'center'}}>Our Clients</h1>
               <Container text textAlign='left'>
      
@@ -340,12 +407,20 @@ Sheikh Zyed Palaces : Karachi, Rahim yar khan, Mir pur Sakro, Shamsi and Sakkur,
 
 </Container>
       </Grid.Column>
+
+      <Grid.Column width={3}
+    //mobile={8}
+      >
+              {/* <h1>Clients</h1>
+      <ProductPictures/> */}
+
+      </Grid.Column>
    
     </Grid.Row>
 
           
 </Grid>
-
+</div>
             <Footer/>
 
             </React.Fragment>

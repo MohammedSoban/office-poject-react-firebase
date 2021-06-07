@@ -46,7 +46,7 @@ class myUsers extends Component {
     }
    
          if(notificationCount!=0){
-           debugger
+           
            that.setState({
              newData:true
            })
@@ -58,7 +58,7 @@ class myUsers extends Component {
     db.collection("users").orderBy('timestamp','desc').get().then(function(querySnapshot) {
       querySnapshot.forEach(function(doc) {
           // doc.data() is never undefined for query doc snapshots
-          console.log(doc.id, " => ", doc.data());
+   
           usersHolder.push({...doc.data(),product_id:doc.id})
       });
 
@@ -93,7 +93,7 @@ class myUsers extends Component {
          <React.Fragment>
                 <Header/>
 
-      
+                <div className='fade-in-top'>
                 <br/>
       
                 <br/>
@@ -191,7 +191,7 @@ class myUsers extends Component {
   </Grid>
 
   </div>
-
+  </div>
 <Footer/>
 
                 </React.Fragment>

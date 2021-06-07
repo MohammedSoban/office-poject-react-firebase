@@ -115,17 +115,18 @@ async function sendWelcomeEmail(email, displayName) {
   const mailOptions = {
     from: `${APP_NAME}`,
     to: email,
-    
+
   };
 
   // The user subscribed to the newsletter.
   mailOptions.subject = `Welcome to ${APP_NAME}!`;
-  mailOptions.text = `Hey ${displayName || ''}!, We confirm that we have deleted your ${APP_NAME} account.
+  mailOptions.html = `<p> Hey ${displayName || ''}!,we welcome you to ${APP_NAME}, We are the leading manufacturers of customized stainless steel equipment, particularly for commercial kitchens, laboratories, hotels and restaurants, etc.</p>
   
+  <img src="https://firebasestorage.googleapis.com/v0/b/moon-steel-fab-project.appspot.com/o/intro.jpg?alt=media&token=54951451-35a0-4175-9ebb-c9127bea52d6"/>
 
 
-  This is an automatically generated email – please do not reply to it. 
-  If you have any queries please email at moonsteelf@gmail.com`;
+  <p> This is an automatically generated email – please do not reply to it. 
+  If you have any queries please email at moonsteelf@gmail.com </p>`;
   
 
   

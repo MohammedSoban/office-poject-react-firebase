@@ -30,7 +30,11 @@ import six from './slideshow/6.jpg'
 import seven from './slideshow/7.jpg'
 import eight from './slideshow/8.jpg'
 import nine from './slideshow/9.jpg'
-
+import ten from './slideshow/10.jpg'
+import { Carousel } from 'react-responsive-carousel';
+import { MDBCarousel, MDBCarouselInner, MDBCarouselItem, MDBView, MDBContainer } from
+"mdbreact";
+// import Carousel from 'nuka-carousel';
 
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
@@ -44,30 +48,14 @@ const tutorialSteps = [
     imgPath:nine
   },
   {
+    label: 'Goč, Serbia',
+    imgPath:ten
+  },
+  {
     label: 'San Francisco – Oakland Bay Bridge, United States',
     imgPath:one,
   },
-  {
-    label: 'Bird',
-    imgPath:two
-  },
-  {
-    label: 'Bali, Indonesia',
-    imgPath:three,
-  },
-
-  {
-    label: 'Goč, Serbia',
-    imgPath:five
-  },
-  {
-    label: 'Goč, Serbia',
-    imgPath:six
-  },
-  {
-    label: 'Goč, Serbia',
-    imgPath:seven
-  },
+ 
 
 
 ];
@@ -79,9 +67,10 @@ const styles = theme => ({
   root: {
     maxWidth:"100%",
      flexGrow: 1,
-    // margin:'auto'
+     margin:'auto',
      //marginLeft:'18%',
     // marginTop:'2%',
+     
     
    },
    header: {
@@ -92,9 +81,9 @@ const styles = theme => ({
      backgroundColor: theme.palette.background.default,
    },
    img: {
-     height: 530,
+     height: '100%',
      display: 'block',
-     maxWidth: 'auto',
+     //maxWidth: 'auto',
      overflow: 'hidden',
      width: '100%',
    },
@@ -129,15 +118,15 @@ componentDidMount=()=>{
   var noticeHolder=[]
   db.collection("notice").doc("notice")
   .onSnapshot(function(doc) {
-      console.log("Current data: ", doc.data());
+   
       noticeHolder.push(doc.data())
  
-      console.log(noticeHolder)
+   
       that.setState({
         notices:noticeHolder
     })
   
-    console.log(that.state.notices)
+  
   });
 
  
@@ -163,11 +152,12 @@ componentDidMount=()=>{
      
    <React.Fragment>
 
+
          <Headers/>
         
-    
+    <div className='fade-in-top'>
    
-    <div className={classes.root}>
+    <div  style={{height:"80%",width:"100%" ,overflow:"hidden"}}>
         
     
        
@@ -180,19 +170,61 @@ componentDidMount=()=>{
           
         {tutorialSteps.map((step, index) => (
             
-          <div key={index}>
+        
               
            
-              <img className={classes.img} src={step.imgPath} />             
+              <img  src={step.imgPath} height="100%" width="100%"/>             
         
             
-          </div>
+      
 
         ))}
       </AutoPlaySwipeableViews>
       
     </div>
+{/* 
+    <Carousel
+                    dynamicHeight={false}
+                    showThumbs={false}
+                      dynamicHeight={true}
+                    useKeyboardArrows={true}
+                    autoPlay={true}
+                    swipeable={true}
+                    interval={2000}
+                    infiniteLoop={true}
+                    >
+                    
+                      {tutorialSteps.map((step,index)=>{
+                        return(
+                        <div style={{display:"inline-block", overflow:"hidden" ,width:"100%",height:"",}}>
+                        <img src={step.imgPath}   height="100%" width="100%" />
+                        </div>
+                        )
+                      })
+                    }
+               
+            </Carousel> */}
 
+
+{/* <div style={{margin:"auto",height:700 ,overflow:"hidden"}}>
+      <Carousel width="100%" >
+      {tutorialSteps.map((step, index) => (
+            
+           
+     
+             
+                <img  src={step.imgPath} height="100%" width="100%"/>             
+          
+         
+        
+  
+          ))}
+
+      </Carousel>
+      </div> */}
+
+
+  
     <Grid celled='internally' stackable={true} >
     <Grid.Row>
       <Grid.Column width={3}>
@@ -241,7 +273,7 @@ The ethos of the company lay utmost emphasize on quality, durability by using th
       Designing and Drawing
       </li>
 <li>
-customization
+Customization
 </li>
 <li>
 Fabrication
@@ -295,9 +327,9 @@ Fabrication
    
    
 
-
+    </div>
     <Footer/>
-  
+ 
     </React.Fragment>
   );
             }

@@ -170,14 +170,14 @@ class SearchAppBar extends Component {
         that.setState({ isUserloggedIn: false, isAdminloggedIn: false });
         //window.location.reload();
         alert("logout successful");
-        console.log("iam if logout");
+        
 
         that.props.history.push("/");
       })
       .catch(function(error) {
         // An error happened.
         alert(error);
-        console.log("iam else logout");
+       
       });
   };
 
@@ -188,8 +188,8 @@ class SearchAppBar extends Component {
       if (user) {
         that.state.user_id = user.uid;
         // User is signed in.
-        console.log("i am if cdm " + user.email + " " + user.uid);
-        console.log(user.displayName);
+       
+       
         if (user.email === "mohammedsoban1@gmail.com" || user.email==="arkhan2@hotmail.com" || user.emai==="ovaiswaraich@gmail.com") {
           that.setState({ isAdminloggedIn: true, loaderVisble: false });
         }
@@ -200,7 +200,7 @@ class SearchAppBar extends Component {
         });
       } else {
         // No user is signed in.
-        console.log("i am else cdm");
+       
         that.setState({ isUserloggedIn: false, loaderVisble: false });
       }
     });
@@ -214,7 +214,7 @@ class SearchAppBar extends Component {
       .where("seen", "==", false)
       .onSnapshot(function(querySnapshot) {
         querySnapshot.forEach(function(doc) {
-          console.log(doc.id, " => ", doc.data());
+          
 
           unReadQueryHolder.push(doc.data());
 
@@ -227,7 +227,7 @@ class SearchAppBar extends Component {
             queryNotify: true,
             queryNotifyCount: unReadQueryHolder.length
           });
-          console.log(that.state.queryNotifyCount, "conyyyyyyyyyyyyyy");
+        
         }
       });
 
@@ -264,10 +264,10 @@ class SearchAppBar extends Component {
     db.collection("users")
       .where("seen", "==", false)
       .onSnapshot(function(querySnapshot) {
-        debugger;
+       
         querySnapshot.forEach(function(doc) {
-          console.log(doc.id, " => ", doc.data());
-          debugger;
+         
+         
           unSeenUserHodler.push(doc.data());
 
           holdSeenUserIdHolder.push(doc.id);
@@ -281,8 +281,8 @@ class SearchAppBar extends Component {
           });
         }
 
-        debugger;
-        console.log(that.state.userNotifyCount, "counttt");
+       
+       
       });
 
     // db.collection('users').where("seen", "==", false)
@@ -319,7 +319,7 @@ class SearchAppBar extends Component {
 
     const that = this;
 
-    console.log(that.state.unReadQueriesId);
+  
     if (that.state.unReadQueriesId.length === 0) {
       that.goto("/queries/" + that.state.queryNotifyCount);
     } else {
@@ -332,16 +332,16 @@ class SearchAppBar extends Component {
             seen: true
           })
           .then(function() {
-            console.log("Document successfully updated!");
+          
             that.setState({
               queryNotify: false
             });
-            debugger;
+           
             that.goto("/queries/" + that.state.queryNotifyCount);
           })
           .catch(function(error) {
             // The document probably doesn't exist.
-            console.error("Error updating document: ", error);
+           
             alert("error reaching queries refresh your page please ", error);
             that.goto("/");
           });
@@ -354,7 +354,7 @@ class SearchAppBar extends Component {
 
     const that = this;
 
-    console.log(that.state.unReadQueriesId);
+   
     if (that.state.unSeenuserId.length === 0) {
       that.goto("/myusers/" + that.state.userNotifyCount);
     } else {
@@ -367,7 +367,7 @@ class SearchAppBar extends Component {
             seen: true
           })
           .then(function() {
-            console.log("Document successfully updated!");
+         
             that.setState({
               queryNotify: false
             });
@@ -375,7 +375,7 @@ class SearchAppBar extends Component {
           })
           .catch(function(error) {
             // The document probably doesn't exist.
-            console.error("Error updating document: ", error);
+       
             alert("error reaching queries refresh your page please ", error);
             that.goto("/");
           });

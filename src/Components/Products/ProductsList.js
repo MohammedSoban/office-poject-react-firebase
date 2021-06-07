@@ -42,12 +42,12 @@ const styles = theme => ({
   },
   img: {
     display: "block",
-    height: 170,
+    height: 190,
     overflow: "hidden",
     width: "100%"
   },
   Card: {
-    height: 400,
+    height: 230,
     width: "100%"
   }
   // Footer:{
@@ -91,7 +91,7 @@ class SpacingGrid extends Component {
         }
       } else {
         // No user is signed in.
-        console.log("no user");
+       
         that.setState({ isUserloggedIn: false });
       }
     });
@@ -128,14 +128,14 @@ class SpacingGrid extends Component {
           productsHolder.push({ ...doc.data(), product_id: doc.id });
           //productsHolder[index]=
 
-          console.log(productsHolder.length, productsHolder);
+         
 
           that.setState({
             products: productsHolder,
             loaderVisible: false
           });
 
-          console.log(this.state.products);
+
         });
       });
   }
@@ -148,7 +148,7 @@ class SpacingGrid extends Component {
     this.setState({
       loaderVisibleOnDelete: true
     });
-    console.log(productName);
+   
     var that = this;
 
     const db = firebase.firestore();
@@ -157,7 +157,7 @@ class SpacingGrid extends Component {
       .doc(product_id)
       .delete()
       .then(function() {
-        console.log("Document successfully deleted!");
+      
         that.state.products.splice(index, 1);
 
         that.setState({
@@ -186,7 +186,7 @@ class SpacingGrid extends Component {
         }
       })
       .catch(function(error) {
-        console.error("Error removing document: ", error);
+  
         alert("Error deleting product: ", error);
       });
   };
@@ -203,7 +203,7 @@ class SpacingGrid extends Component {
     return (
       <React.Fragment>
         <Header />
-
+      
         <Loader
           type="ThreeDots"
           color="green"
@@ -241,7 +241,7 @@ class SpacingGrid extends Component {
           ) : (
             <Grid
               doubling={true}
-              columns={5}
+              columns={4}
               // container={true}
               padded={2}
               stackable={true}
@@ -253,8 +253,9 @@ class SpacingGrid extends Component {
                   <Grid.Column padded={2}>
                     <Link
                       to={"productView/" + product.product_id}
-                      target="_blank"
+                     // target="_blank"
                     >
+                        <div className='fade-in-top'>
                       <Card.Group>
                         <Card
                           className={classes.Card}
@@ -273,12 +274,11 @@ class SpacingGrid extends Component {
                           />
                           <Card.Content>
                             <Card.Header>{product.productName}</Card.Header>
-                            <Card.Description>
-                              {product.productDetails}
-                            </Card.Description>
+                         
                           </Card.Content>
                         </Card>
                       </Card.Group>
+                      </div>
                     </Link>
                     <br />
                     <Card.Content extra>
@@ -308,6 +308,7 @@ class SpacingGrid extends Component {
                       ) : null}
                     </Card.Content>
                   </Grid.Column>
+                  
                 );
               })}
             </Grid>

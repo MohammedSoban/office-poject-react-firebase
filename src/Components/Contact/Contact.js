@@ -73,8 +73,8 @@ class Contact extends Component {
 
     })
       .then(() => {
-        debugger
-        console.log("Document successfully written!");
+        
+       
         that.setState({
           loaderVisible: false,
           emailSent: true,
@@ -86,15 +86,15 @@ class Contact extends Component {
         alert('Query has been successfuly sent to concerning department')
       })
       .catch((error) => {
-        debugger
-        console.error("Error writing document: ", error);
+        
+       
         that.setState({
           loaderVisible: false,
         })
         alert('unable to upload ', error)
 
       });
-    debugger
+    
   }
 
   // testing = () => {
@@ -102,7 +102,7 @@ class Contact extends Component {
   //   // const db = firebase.firestore();
   //   const db = new firebase.firestore()
   //   const { name, email, subject, message } = this.state
-  //   // debugger
+  //   // 
   //   db.collection("Queries").doc().set({
   //     name: name,
   //     email: email,
@@ -135,7 +135,7 @@ class Contact extends Component {
 
       <React.Fragment>
         <Header />
-
+        <div className='fade-in-top'>
 
         <MDBContainer>
           <h2 className="h1-responsive font-weight-bold text-center my-5">
@@ -238,9 +238,9 @@ class Contact extends Component {
 
                 </li>
                 <li>
-                  <a href='mailto:moonsteelf@gmail.com'>
+                  <a href='mailto:info@moonsteelfab.com'>
                     <MDBIcon icon="envelope" size="2x" className="blue-text mt-4" />
-                    <p>moonsteelf@gmail.com</p>
+                    <p>info@moonsteelfab.com</p>
                   </a>
                 </li>
               </ul>
@@ -418,6 +418,7 @@ class Contact extends Component {
             </Grid.Column>
           </Grid.Row>
         </Grid>
+        </div>
         <Footer />
       </React.Fragment>
 

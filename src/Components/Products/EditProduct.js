@@ -148,7 +148,7 @@ class EditProduct extends Component {
         const tempImages=[]
     
         let id =this.props.match.params.product_id
-       // debugger
+       // 
     
        this.setState({
            id:id
@@ -158,7 +158,7 @@ class EditProduct extends Component {
     
     docRef.get().then(function(doc) {
         if (doc.exists) {
-            console.log("Document data:", doc.data());
+      
     
             var obj={}
     
@@ -185,7 +185,7 @@ class EditProduct extends Component {
         that.setState({
             initialLoder:false
           })
-        console.log("Error getting document:", error);
+      
         alert(error)
     })
     
@@ -308,7 +308,7 @@ class EditProduct extends Component {
           })
   
          if(this.state.fileChnages===false){
-             debugger
+             
             db.collection("Products").doc(this.state.id).set({
                
                 productName:productName,
@@ -317,6 +317,8 @@ class EditProduct extends Component {
                 productPrice:productPrice,
                 productDetails:productDetails,
                 addSpec,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                created: new Date().getTime()
              
      
 
@@ -340,7 +342,7 @@ class EditProduct extends Component {
               })
         })
          }else{
-             debugger
+             
           this.state.files.map((file, index) => {
               storageRef.child(`images/${productName}/${file.name}`).put(file)
                   .then((response) => {
@@ -348,31 +350,28 @@ class EditProduct extends Component {
                         
                  
                      
-                      console.log('Upload is ' + this.state.progress + '% done');
-                      console.log(progresss)
+                    
+                   
                      
                       fileName.push(file.name)
                       
-                        console.log(fileName,'files name')
+                      
 
                       response.task.snapshot.ref.getDownloadURL().then((downloadURL) => {
                           urls.push(downloadURL)
                           
                        
-                          console.log(urls)
+                         
                       }).then(()=>{
                         
                        
 
-                          console.log(this.state.fileNames,'files name state')
+                    
 
-                          console.log('file.lennth',this.state.files.length)
-                          console.log('index=',index)
+                         
                           var sum=index+1
                           
-                          console.log('sum=',sum)
-  
-                          console.log('second iteration')
+                      
                           
 
                           if(this.state.files.length===urls.length){
@@ -385,8 +384,8 @@ class EditProduct extends Component {
                           }
   
                           if(this.state.files.length===urls.length){
-                          debugger
-                          console.log(this.state.fileNames)
+                          
+                        
 
                           let { productName,
                             files,
@@ -480,7 +479,7 @@ class EditProduct extends Component {
             imageUrls:this.state.imageUrls
         })
  
-        console.log(this.state.imageUrls)
+        
     }
 
     goto=(path)=>{

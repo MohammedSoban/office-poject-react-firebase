@@ -216,7 +216,7 @@ class RecipeReviewCard extends Component {
 
               firebase.auth().signOut().then(function () {// logging user out wehn signup 
                 // Sign-out successful.
-                console.log("Document successfully written!");
+               
                 alert('you have succesfully signed up!')
                 that.goto('/login');
 
@@ -225,7 +225,7 @@ class RecipeReviewCard extends Component {
 
               }).catch(function (error) {
                 // An error happened.
-                console.log('user not logged out')
+              
                 that.setState({
                   loaderVisible: false
                 })
@@ -233,7 +233,7 @@ class RecipeReviewCard extends Component {
 
             })
             .catch(function (error) {
-              console.error("Error writing document: ", error);
+             
               that.setState({
                 loaderVisible: false
               })
@@ -274,6 +274,7 @@ class RecipeReviewCard extends Component {
 
       <React.Fragment>
         <Header />
+        <div className='fade-in-top'>
         <Card className={classes.card}>
           <CardContent>
 
@@ -370,6 +371,7 @@ class RecipeReviewCard extends Component {
             ></Loader>
           </CardContent>
         </Card>
+        </div>
         <Footer/>
       </React.Fragment>
     );

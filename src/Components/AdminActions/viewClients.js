@@ -36,7 +36,7 @@ componentDidMount=()=>{
     db.collection("clients").get().then(function(querySnapshot) {
         querySnapshot.forEach(function(doc) {
             // doc.data() is never undefined for query doc snapshots
-            console.log(doc.id, " => ", doc.data());
+           
             clientsHolder.push({...doc.data(),client_id:doc.id})
         });
 
@@ -51,14 +51,14 @@ handleDelete=(client_id,index)=>{
     const db =firebase.firestore();
 
     db.collection("clients").doc(client_id).delete().then(function() {
-        console.log("Document successfully deleted!");
+        
         that.state.clients.splice(index,1)
         that.setState({
             clients:that.state.clients
         })
         alert('client succesfully deleted')
     }).catch(function(error) {
-        console.error("Error removing document: ", error);
+      
         alert('error deleteing logo ',error)
     });
   }
@@ -69,9 +69,13 @@ handleDelete=(client_id,index)=>{
 
     render() {
         return (
-            <div>
+            <div >
                 <Header/>
                 <br/>
+                <div className='fade-in-top'>
+                <div style={{ 
+    minHeight:600
+  }}>
                 <Grid unstackable={true}>
 <Grid.Row centered={true}>
  
@@ -110,9 +114,10 @@ handleDelete=(client_id,index)=>{
 
 </Grid.Row>
 </Grid>
-
+</div>
+</div>
                 <Footer/>
-                
+              
             </div>
         );
     }

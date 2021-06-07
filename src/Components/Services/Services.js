@@ -15,7 +15,7 @@ class Services extends Component {
             <React.Fragment>
             <Headers/>
            <br/>
-
+           <div className='fade-in-top'>
           
            <Grid celled='internally'
            //centered={true}
@@ -75,7 +75,7 @@ class Services extends Component {
 
            
 
-
+</div>
             <Footer/>
 
             </React.Fragment>
